@@ -6,9 +6,11 @@ import { Bangers } from "next/font/google";
 
 const bangers = Bangers({ subsets: ["latin"], weight: "400" });
 
+import { BlogPost } from "@/lib/notion";
+
 interface BlogProps {
-    posts?: any[];
-    onPostClick?: (post: any) => void;
+    posts?: BlogPost[];
+    onPostClick?: (post: BlogPost) => void;
     selectedCategory?: string | null;
 }
 

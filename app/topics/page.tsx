@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Topics from "@/components/Topics";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { BlogPost } from "@/lib/notion";
 
 export default function TopicsPage() {
     const router = useRouter();
@@ -13,7 +13,7 @@ export default function TopicsPage() {
         router.push(`/blog?category=${encodeURIComponent(category)}`);
     };
 
-    const handlePostClick = (post: any) => {
+    const handlePostClick = (post: BlogPost) => {
         router.push(`/post/${post.slug}`);
     };
 

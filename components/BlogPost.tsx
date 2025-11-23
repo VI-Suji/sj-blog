@@ -6,17 +6,10 @@ import { Bangers } from "next/font/google";
 
 const bangers = Bangers({ subsets: ["latin"], weight: "400" });
 
+import { BlogPost as BlogPostType } from "@/lib/notion";
+
 interface BlogPostProps {
-    post: {
-        id: string;
-        title: string;
-        slug: string;
-        date: string;
-        tags: string[];
-        description: string;
-        cover: string;
-        readTime?: string;
-    };
+    post: BlogPostType;
     onBack: () => void;
 }
 
@@ -237,7 +230,7 @@ export default function BlogPost({ post, onBack }: BlogPostProps) {
                 flushList();
                 elements.push(
                     <div key={elements.length} className="my-10 relative p-6 md:p-8 border-4 border-black bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-                        <div className="absolute top-4 left-4 text-5xl text-gray-200 font-serif leading-none">"</div>
+                        <div className="absolute top-4 left-4 text-5xl text-gray-200 font-serif leading-none">&quot;</div>
                         <blockquote className="text-xl md:text-2xl font-bold italic text-black leading-relaxed text-center relative z-10 py-2">
                             {line.slice(2)}
                         </blockquote>

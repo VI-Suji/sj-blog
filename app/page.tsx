@@ -7,9 +7,11 @@ import LatestScrolls from "@/components/Latestscrolls";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
+import { BlogPost } from "@/lib/notion";
+
 export default function Home() {
   const router = useRouter();
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<BlogPost[]>([]);
 
   useEffect(() => {
     fetch('/api/posts')
@@ -17,7 +19,7 @@ export default function Home() {
       .then(data => setPosts(data));
   }, []);
 
-  const handlePostClick = (post: any) => {
+  const handlePostClick = (post: BlogPost) => {
     router.push(`/post/${post.slug}`);
   };
 

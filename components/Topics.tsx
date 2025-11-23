@@ -5,15 +5,17 @@ import { Bangers } from "next/font/google";
 
 const bangers = Bangers({ subsets: ["latin"], weight: "400" });
 
+import { BlogPost } from "@/lib/notion";
+
 interface TopicsProps {
     onCategoryClick?: (category: string) => void;
-    onPostClick?: (post: any) => void;
+    onPostClick?: (post: BlogPost) => void;
 }
 
 export default function Topics({ onCategoryClick, onPostClick }: TopicsProps) {
-    const [posts, setPosts] = useState<any[]>([]);
+    const [posts, setPosts] = useState<BlogPost[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
-    const [searchResults, setSearchResults] = useState<any[]>([]);
+    const [searchResults, setSearchResults] = useState<BlogPost[]>([]);
 
     // Categories - these should match the options in your Notion Category field
     const categories = [

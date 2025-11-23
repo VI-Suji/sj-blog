@@ -3,9 +3,11 @@ import { Bangers } from "next/font/google";
 
 const bangers = Bangers({ subsets: ["latin"], weight: "400" });
 
+import { BlogPost } from "@/lib/notion";
+
 interface LatestScrollsProps {
-    posts?: any[];
-    onPostClick?: (post: any) => void;
+    posts?: BlogPost[];
+    onPostClick?: (post: BlogPost) => void;
     onNavClick: (view: string) => void;
 }
 

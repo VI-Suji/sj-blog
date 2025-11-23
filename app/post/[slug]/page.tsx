@@ -2,13 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import BlogPost from "@/components/BlogPost";
+import BlogPostComponent from "@/components/BlogPost";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
+import { BlogPost } from "@/lib/notion";
+
 export default function PostPage({ params }: { params: Promise<{ slug: string }> }) {
     const router = useRouter();
-    const [post, setPost] = useState<any>(null);
+    const [post, setPost] = useState<BlogPost | null>(null);
     const [slug, setSlug] = useState<string>("");
     const [loading, setLoading] = useState(true);
 
@@ -28,7 +30,7 @@ export default function PostPage({ params }: { params: Promise<{ slug: string }>
                     const pageData = data.page || data;
                     const props = pageData.properties || {};
 
-                    const postData = {
+                    const postData: BlogPost = {
                         id: pageData.id,
                         title: props.Name?.title?.[0]?.plain_text || "Untitled",
                         slug: slug,
@@ -36,6 +38,7 @@ export default function PostPage({ params }: { params: Promise<{ slug: string }>
                         tags: props.Tags?.multi_select?.map((tag: any) => tag.name) || [],
                         category: props.Category?.select?.name || "",
                         description: props.Description?.rich_text?.[0]?.plain_text || "",
+                        published: props.Published?.checkbox || false,
                         cover: pageData.cover?.file?.url || pageData.cover?.external?.url || "/latest1.png",
                         readTime: "5 min read",
                     };
@@ -111,7 +114,7 @@ export default function PostPage({ params }: { params: Promise<{ slug: string }>
     return (
         <>
             <Navbar setCurrentView={handleViewChange} currentView="post" />
-            <BlogPost post={post} onBack={handleBack} />
+            <BlogPostComponent post={post} onBack={handleBack} />
             <Footer onNavClick={handleViewChange} />
         </>
     );

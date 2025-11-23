@@ -1,15 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Blog from "@/components/Blog";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-export default function BlogPage() {
+import { BlogPost } from "@/lib/notion";
+
+function BlogContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = useState<BlogPost[]>([]);
     const selectedCategory = searchParams.get('category');
 
     useEffect(() => {
@@ -18,7 +20,7 @@ export default function BlogPage() {
             .then(data => setPosts(data));
     }, []);
 
-    const handlePostClick = (post: any) => {
+    const handlePostClick = (post: BlogPost) => {
         router.push(`/post/${post.slug}`);
     };
 
@@ -32,5 +34,13 @@ export default function BlogPage() {
             <Blog posts={posts} onPostClick={handlePostClick} selectedCategory={selectedCategory} />
             <Footer onNavClick={handleViewChange} />
         </>
+    );
+}
+
+export default function BlogPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <BlogContent />
+        </Suspense>
     );
 }
