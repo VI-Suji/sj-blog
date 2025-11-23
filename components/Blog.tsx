@@ -78,14 +78,23 @@ export default function Blog({ posts = [], onPostClick, selectedCategory }: Blog
                             </span>
                         )}
                         {selectedTag && (
-                            <span className={`inline-block px-4 py-1 border-2 border-black text-sm font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ${selectedTag === 'Thoughts' ? 'bg-yellow-300' :
+                            <span
+                                className={`inline-block px-4 py-1 border-2 border-black text-sm font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ${selectedTag === 'Thoughts' ? 'bg-yellow-300' :
                                     selectedTag === 'Books' ? 'bg-blue-300' :
                                         selectedTag === 'Tech' ? 'bg-green-300' :
-                                            selectedTag === 'Pictures' ? 'bg-pink-300' : 'bg-gray-200'
-                                }`}>
-                                FILTER: {selectedTag.toUpperCase()}
+                                            selectedTag === 'Pictures' ? 'bg-pink-300' :
+                                                'bg-gray-200'
+                                    }`}
+                            >
+                                {{
+                                    Thoughts: "💭 RANDOM THOUGHTS",
+                                    Books: "📚 BOOK COLLECTION",
+                                    Tech: "🧪 TECH STUFF",
+                                    Pictures: "📸 PHOTO GALLERY"
+                                }[selectedTag] || `FILTER: ${selectedTag.toUpperCase()}`}
                             </span>
                         )}
+
                     </div>
                 </div>
 

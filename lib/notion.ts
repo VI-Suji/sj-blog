@@ -65,7 +65,7 @@ export const getPublishedPosts = async (): Promise<BlogPost[]> => {
 
         const data = await response.json();
 
-        const posts = data.results.map((page: any) => {
+        const posts = await Promise.all(data.results.map(async (page: any) => {
             const props = page.properties;
 
             // Handle Cover Image
@@ -78,6 +78,19 @@ export const getPublishedPosts = async (): Promise<BlogPost[]> => {
                 }
             }
 
+            // Calculate Read Time
+            let readTime = "1 min read";
+            try {
+                const mdblocks = await n2m.pageToMarkdown(page.id);
+                const mdString = n2m.toMarkdownString(mdblocks);
+                const content = mdString.parent || "";
+                const wordCount = content.split(/\s+/).length;
+                const minutes = Math.ceil(wordCount / 100);
+                readTime = `${minutes} min read`;
+            } catch (e) {
+                console.error(`Error calculating read time for page ${page.id}:`, e);
+            }
+
             return {
                 id: page.id,
                 title: props.Name?.title?.[0]?.plain_text || "Untitled",
@@ -88,9 +101,9 @@ export const getPublishedPosts = async (): Promise<BlogPost[]> => {
                 description: props.Description?.rich_text?.[0]?.plain_text || "",
                 published: props.Published?.checkbox || false,
                 cover: cover,
-                readTime: "5 min read",
+                readTime: readTime,
             };
-        });
+        }));
 
         return posts;
     } catch (error) {

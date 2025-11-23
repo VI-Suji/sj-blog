@@ -16,6 +16,7 @@ interface BlogPostProps {
 export default function BlogPost({ post, onBack }: BlogPostProps) {
     const [content, setContent] = useState<string>("");
     const [loading, setLoading] = useState(true);
+    const [readTime, setReadTime] = useState<number | null>(null);
 
     useEffect(() => {
         const fetchContent = async () => {
@@ -23,7 +24,13 @@ export default function BlogPost({ post, onBack }: BlogPostProps) {
                 const response = await fetch(`/api/posts/${post.slug}`);
                 if (response.ok) {
                     const data = await response.json();
-                    setContent(data.markdown || "");
+                    const md = data.markdown || "";
+                    setContent(md);
+
+                    // --- Calculate read time ---
+                    const wordCount = md.split(/\s+/).filter(Boolean).length;
+                    const minutes = Math.ceil(wordCount / 100);
+                    setReadTime(minutes);
                 }
             } catch (error) {
                 console.error("Error fetching post content:", error);
@@ -308,14 +315,26 @@ export default function BlogPost({ post, onBack }: BlogPostProps) {
 
                     <div className="flex flex-wrap items-center gap-3 md:gap-4">
                         <div className="flex items-center gap-2 border-2 border-black px-3 py-1.5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-white">
-                            <div className="w-6 h-6 rounded-full bg-black"></div>
+                            <svg
+                                width="18"
+                                height="18"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="black"
+                                strokeWidth="2.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            >
+                                <path d="M12 20h9" />
+                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+                            </svg>
                             <span className="font-bold uppercase tracking-wider text-xs">Sujith</span>
                         </div>
                         <div className="font-bold text-gray-500 uppercase tracking-wider text-xs">
                             {new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                         </div>
                         <div className="font-bold text-gray-500 uppercase tracking-wider text-xs">
-                            • {post.readTime || "5 min read"}
+                            • {readTime ? `${readTime} min read` : "—"}
                         </div>
 
                         {/* Tags inline */}
