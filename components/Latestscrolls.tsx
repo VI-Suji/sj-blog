@@ -50,7 +50,7 @@ export default function LatestScrolls({ posts = [], onPostClick, onNavClick }: L
 
                             {/* Content */}
                             <div className="flex-1 flex flex-col">
-                                <h3 className={`${bangers.className} text-2xl leading-none mb-2 group-hover:underline`}>{post.title}</h3>
+                                <h3 className={`${bangers.className} text-2xl leading-none mb-2 group-hover:underline truncate md:whitespace-normal`}>{post.title}</h3>
 
                                 <div className="text-xs font-bold text-gray-500 mb-4 flex justify-between border-b-2 border-gray-100 pb-2">
                                     <span>{new Date(post.date).toLocaleDateString()}</span>
@@ -68,9 +68,23 @@ export default function LatestScrolls({ posts = [], onPostClick, onNavClick }: L
                         </div>
                     ))
                 ) : (
-                    <div className="col-span-3 text-center py-12 font-bold text-gray-500">
-                        Summoning scrolls from the void...
-                    </div>
+                    // Skeleton Loader
+                    Array.from({ length: 3 }).map((_, idx) => (
+                        <div
+                            key={idx}
+                            className="bg-white border-4 border-black p-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] animate-pulse"
+                        >
+                            <div className="relative w-full h-48 bg-gray-200 mb-4"></div>
+                            <div className="h-6 bg-gray-200 mb-3 w-3/4"></div>
+                            <div className="h-4 bg-gray-200 mb-2 w-full"></div>
+                            <div className="h-4 bg-gray-200 mb-4 w-5/6"></div>
+                            <div className="flex gap-2 mb-3">
+                                <div className="h-6 w-16 bg-gray-200"></div>
+                                <div className="h-6 w-20 bg-gray-200"></div>
+                            </div>
+                            <div className="h-4 bg-gray-200 w-24"></div>
+                        </div>
+                    ))
                 )}
             </div>
 
