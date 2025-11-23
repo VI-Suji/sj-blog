@@ -71,13 +71,22 @@ export default function Blog({ posts = [], onPostClick, selectedCategory }: Blog
                     <h1 className={`${bangers.className} relative z-10 text-5xl md:text-7xl text-center uppercase tracking-wider px-8`}>
                         THE SCROLL ARCHIVE
                     </h1>
-                    {selectedCategory && (
-                        <div className="relative z-10 text-center mt-2">
-                            <span className="inline-block px-4 py-1 bg-yellow-300 border-2 border-black text-sm font-bold">
+                    <div className="relative z-10 flex flex-col gap-2 items-center mt-4">
+                        {selectedCategory && (
+                            <span className="inline-block px-4 py-1 bg-yellow-300 border-2 border-black text-sm font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                                 CATEGORY: {selectedCategory.toUpperCase()}
                             </span>
-                        </div>
-                    )}
+                        )}
+                        {selectedTag && (
+                            <span className={`inline-block px-4 py-1 border-2 border-black text-sm font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ${selectedTag === 'Thoughts' ? 'bg-yellow-300' :
+                                    selectedTag === 'Books' ? 'bg-blue-300' :
+                                        selectedTag === 'Tech' ? 'bg-green-300' :
+                                            selectedTag === 'Pictures' ? 'bg-pink-300' : 'bg-gray-200'
+                                }`}>
+                                FILTER: {selectedTag.toUpperCase()}
+                            </span>
+                        )}
+                    </div>
                 </div>
 
                 {/* FILTER DOCK */}
