@@ -169,6 +169,7 @@ export default function Blog({ posts = [], onPostClick, selectedCategory }: Blog
                                     alt={post.title}
                                     fill
                                     className="object-cover transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0"
+                                    unoptimized
                                 />
                             </div>
 

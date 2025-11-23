@@ -56,6 +56,7 @@ export const getPublishedPosts = async (): Promise<BlogPost[]> => {
                     },
                 ],
             }),
+            next: { revalidate: 60, tags: ['posts'] }
         });
 
         if (!response.ok) {
@@ -70,12 +71,28 @@ export const getPublishedPosts = async (): Promise<BlogPost[]> => {
 
             // Handle Cover Image
             let cover = "/latest1.png"; // Default fallback
-            if (page.cover) {
-                if (page.cover.type === "file") {
-                    cover = page.cover.file.url;
-                } else if (page.cover.type === "external") {
-                    cover = page.cover.external.url;
+
+            try {
+                // Check for "Cover" property (Files & Media type)
+                const coverProp = props.Cover || props.cover;
+                if (coverProp?.files?.length > 0) {
+                    const fileObj = coverProp.files[0];
+                    if (fileObj.type === "file" && fileObj.file?.url) {
+                        cover = fileObj.file.url;
+                    } else if (fileObj.type === "external" && fileObj.external?.url) {
+                        cover = fileObj.external.url;
+                    }
                 }
+                // Fallback to Page Cover
+                else if (page.cover) {
+                    if (page.cover.type === "file" && page.cover.file?.url) {
+                        cover = page.cover.file.url;
+                    } else if (page.cover.type === "external" && page.cover.external?.url) {
+                        cover = page.cover.external.url;
+                    }
+                }
+            } catch (e) {
+                console.error("Error processing cover image for page", page.id, e);
             }
 
             // Calculate Read Time
@@ -133,6 +150,7 @@ export const getPostBySlug = async (slug: string) => {
                 },
             },
         }),
+        next: { revalidate: 60, tags: ['posts'] }
     });
 
     if (!response.ok) return null;

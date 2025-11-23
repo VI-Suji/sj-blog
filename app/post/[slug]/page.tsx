@@ -31,6 +31,28 @@ export default function PostPage({ params }: { params: Promise<{ slug: string }>
                     const pageData = data.page || data;
                     const props = pageData.properties || {};
 
+                    // Handle Cover Image
+                    let cover = "/latest1.png"; // Default fallback
+                    try {
+                        const coverProp = props.Cover || props.cover;
+                        if (coverProp?.files?.length > 0) {
+                            const fileObj = coverProp.files[0];
+                            if (fileObj.type === "file" && fileObj.file?.url) {
+                                cover = fileObj.file.url;
+                            } else if (fileObj.type === "external" && fileObj.external?.url) {
+                                cover = fileObj.external.url;
+                            }
+                        } else if (pageData.cover) {
+                            if (pageData.cover.type === "file" && pageData.cover.file?.url) {
+                                cover = pageData.cover.file.url;
+                            } else if (pageData.cover.type === "external" && pageData.cover.external?.url) {
+                                cover = pageData.cover.external.url;
+                            }
+                        }
+                    } catch (e) {
+                        console.error("Error processing cover image:", e);
+                    }
+
                     const postData: BlogPost = {
                         id: pageData.id,
                         title: props.Name?.title?.[0]?.plain_text || "Untitled",
@@ -40,7 +62,7 @@ export default function PostPage({ params }: { params: Promise<{ slug: string }>
                         category: props.Category?.select?.name || "",
                         description: props.Description?.rich_text?.[0]?.plain_text || "",
                         published: props.Published?.checkbox || false,
-                        cover: pageData.cover?.file?.url || pageData.cover?.external?.url || "/latest1.png",
+                        cover: cover,
                         readTime: "5 min read",
                     };
 

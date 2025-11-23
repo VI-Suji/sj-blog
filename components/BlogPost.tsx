@@ -293,12 +293,13 @@ export default function BlogPost({ post, onBack }: BlogPostProps) {
                 {/* HEADER */}
                 <header className="mb-12 border-b-4 border-black pb-6">
                     {post.cover && (
-                        <div className="relative w-full h-[300px] border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] mb-6">
+                        <div className="relative w-full aspect-video border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] mb-6">
                             <Image
                                 src={post.cover}
                                 alt={post.title}
                                 fill
                                 className="object-cover"
+                                unoptimized
                             />
                         </div>
                     )}

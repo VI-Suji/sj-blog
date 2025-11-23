@@ -45,6 +45,7 @@ export default function LatestScrolls({ posts = [], onPostClick, onNavClick }: L
                                     alt={post.title}
                                     fill
                                     className="object-cover object-center transition-transform duration-300 grayscale group-hover:grayscale-0"
+                                    unoptimized
                                 />
                             </div>
 
