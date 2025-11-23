@@ -56,7 +56,7 @@ export const getPublishedPosts = async (): Promise<BlogPost[]> => {
                     },
                 ],
             }),
-            next: { revalidate: 60, tags: ['posts'] }
+            next: { tags: ['posts'] }
         });
 
         if (!response.ok) {
@@ -150,7 +150,7 @@ export const getPostBySlug = async (slug: string) => {
                 },
             },
         }),
-        next: { revalidate: 60, tags: ['posts'] }
+        next: { tags: ['posts'] }
     });
 
     if (!response.ok) return null;
