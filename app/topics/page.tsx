@@ -22,10 +22,12 @@ export default function TopicsPage() {
     };
 
     return (
-        <>
+        <div className="flex flex-col min-h-screen">
             <Navbar setCurrentView={handleViewChange} currentView="topics" />
-            <Topics onCategoryClick={handleCategoryClick} onPostClick={handlePostClick} />
+            <div className="flex-grow">
+                <Topics onCategoryClick={handleCategoryClick} onPostClick={handlePostClick} />
+            </div>
             <Footer onNavClick={handleViewChange} />
-        </>
+        </div>
     );
 }

@@ -69,19 +69,21 @@ export default function PostPage({ params }: { params: Promise<{ slug: string }>
 
     if (loading) {
         return (
-            <>
+            <div className="flex flex-col min-h-screen">
                 <Navbar setCurrentView={handleViewChange} currentView="post" />
-                <Loader />
+                <div className="flex-grow flex items-center justify-center">
+                    <Loader />
+                </div>
                 <Footer onNavClick={handleViewChange} />
-            </>
+            </div>
         );
     }
 
     if (!post) {
         return (
-            <>
+            <div className="flex flex-col min-h-screen">
                 <Navbar setCurrentView={handleViewChange} currentView="post" />
-                <div className="min-h-screen flex items-center justify-center">
+                <div className="flex-grow flex items-center justify-center">
                     <div className="text-center">
                         <h1 className="text-4xl font-bold mb-4">Post Not Found</h1>
                         <button
@@ -93,15 +95,17 @@ export default function PostPage({ params }: { params: Promise<{ slug: string }>
                     </div>
                 </div>
                 <Footer onNavClick={handleViewChange} />
-            </>
+            </div>
         );
     }
 
     return (
-        <>
+        <div className="flex flex-col min-h-screen">
             <Navbar setCurrentView={handleViewChange} currentView="post" />
-            <BlogPostComponent post={post} onBack={handleBack} />
+            <div className="flex-grow">
+                <BlogPostComponent post={post} onBack={handleBack} />
+            </div>
             <Footer onNavClick={handleViewChange} />
-        </>
+        </div>
     );
 }

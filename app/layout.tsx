@@ -30,7 +30,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="animate-in fade-in duration-500">
+        <div className="animate-in fade-in duration-500 min-h-screen flex flex-col">
           {children}
         </div>
       </body>

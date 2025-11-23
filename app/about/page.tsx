@@ -13,10 +13,12 @@ export default function AboutPage() {
     };
 
     return (
-        <>
+        <div className="flex flex-col min-h-screen">
             <Navbar setCurrentView={handleViewChange} currentView="about" />
-            <About />
+            <div className="flex-grow">
+                <About />
+            </div>
             <Footer onNavClick={handleViewChange} />
-        </>
+        </div>
     );
 }

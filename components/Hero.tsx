@@ -35,7 +35,7 @@ export default function Hero({ onNavClick }: HeroProps) {
                         {/* Mobile: Card Style | Desktop: Clean Text */}
                         <div className="bg-white border-4 border-black p-2 max-w-[90%] md:max-w-xl md:bg-transparent md:border-0 md:shadow-none md:p-0 pointer-events-auto">
                             <h1 className={`${bangers.className} text-5xl md:text-7xl font-bold leading-none text-black mb-6`}>
-                                The best way to predict the future is to <span onClick={() => onNavClick('about')} className="text-red-600 inline-block cursor-pointer hover:scale-105 active:scale-95 transition-transform">invent</span> it.
+                                The best way to predict the future is to <span className="text-red-600 inline-block cursor-pointer hover:scale-105 active:scale-95 transition-transform">invent</span> it.
                             </h1>
                             {/* <div className="flex gap-4 mb-6 md:hidden">
                                 <button onClick={() => onNavClick('blog')} className="bg-black text-white px-6 py-3 font-bold text-sm shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)] active:translate-y-1 active:shadow-none transition-all">

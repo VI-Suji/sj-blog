@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Loader() {
     return (
-        <div className="min-h-[50vh] flex items-center justify-center w-full">
+        <div className="flex items-center justify-center w-full h-full">
             <div className="text-center">
                 {/* Minimal manga-style loader */}
                 <div className="relative inline-block">

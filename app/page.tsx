@@ -28,11 +28,13 @@ export default function Home() {
   };
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Navbar setCurrentView={handleViewChange} currentView="home" />
-      <Hero onNavClick={handleViewChange} />
-      <LatestScrolls posts={posts} onPostClick={handlePostClick} onNavClick={handleViewChange} />
+      <div className="flex-grow">
+        <Hero onNavClick={handleViewChange} />
+        <LatestScrolls posts={posts} onPostClick={handlePostClick} onNavClick={handleViewChange} />
+      </div>
       <Footer onNavClick={handleViewChange} />
-    </>
+    </div>
   );
 }
