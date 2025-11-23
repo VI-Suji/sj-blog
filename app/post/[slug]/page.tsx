@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import BlogPostComponent from "@/components/BlogPost";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import Loader from "@/components/Loader";
 
 import { BlogPost } from "@/lib/notion";
 
@@ -65,27 +66,12 @@ export default function PostPage({ params }: { params: Promise<{ slug: string }>
         router.push(`/${view === 'home' ? '' : view}`);
     };
 
+
     if (loading) {
         return (
             <>
                 <Navbar setCurrentView={handleViewChange} currentView="post" />
-                <div className="min-h-screen flex items-center justify-center bg-white">
-                    <div className="text-center">
-                        {/* Minimal manga-style loader */}
-                        <div className="relative inline-block">
-                            {/* Simple rotating circle */}
-                            <div className="w-16 h-16 border-4 border-gray-200 border-t-black rounded-full animate-spin"></div>
-                        </div>
-
-                        {/* Minimal text */}
-                        <div className="mt-6">
-                            <p className="text-sm uppercase tracking-widest text-gray-400 font-medium">
-                                読み込み中
-                            </p>
-                            <p className="text-xs text-gray-300 mt-1">Loading...</p>
-                        </div>
-                    </div>
-                </div>
+                <Loader />
                 <Footer onNavClick={handleViewChange} />
             </>
         );

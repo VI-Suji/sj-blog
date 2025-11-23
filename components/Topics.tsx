@@ -122,7 +122,7 @@ export default function Topics({ onCategoryClick, onPostClick }: TopicsProps) {
                             <div
                                 key={idx}
                                 onClick={() => onPostClick && onPostClick(post)}
-                                className="bg-white border-2 border-black p-4 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all cursor-pointer"
+                                className="bg-white border-2 border-black p-4 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 active:translate-y-0 active:shadow-none active:scale-[0.99] transition-all cursor-pointer"
                             >
                                 <h3 className="font-bold text-lg mb-1">{post.title}</h3>
                                 <p className="text-sm text-gray-600 mb-2">{post.description}</p>
@@ -156,7 +156,7 @@ export default function Topics({ onCategoryClick, onPostClick }: TopicsProps) {
                         <div
                             key={idx}
                             onClick={() => onCategoryClick && onCategoryClick(cat.name)}
-                            className={`${cat.color} border-2 border-black rounded-full p-4 flex items-center justify-between hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all cursor-pointer group`}
+                            className={`${cat.color} border-2 border-black rounded-full p-4 flex items-center justify-between hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 active:translate-y-0 active:shadow-none active:scale-[0.98] transition-all cursor-pointer group`}
                         >
                             <div className="flex items-center gap-4">
                                 <div className="text-2xl w-10 text-center">{cat.icon}</div>

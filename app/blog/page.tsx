@@ -37,9 +37,11 @@ function BlogContent() {
     );
 }
 
+import Loader from "@/components/Loader";
+
 export default function BlogPage() {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Loader />}>
             <BlogContent />
         </Suspense>
     );
