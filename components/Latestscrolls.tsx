@@ -91,7 +91,7 @@ export default function LatestScrolls({ posts = [], onPostClick, onNavClick }: L
             {/* REDIRECT LINK */}
             <div
                 onClick={() => onNavClick('blog')}
-                className="mt-8 flex items-center gap-2 text-black font-bold hover:underline cursor-pointer w-fit border-b-2 border-transparent hover:border-black active:text-gray-600 transition-all text-sm md:text-base"
+                className="mt-8 flex items-center gap-2 text-black font-bold hover:underline cursor-pointer w-fit border-b-2 border-transparent hover:border-black active:text-gray-600 active:scale-95 origin-left transition-all text-sm md:text-base"
             >
                 <span>View All Posts</span>
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
