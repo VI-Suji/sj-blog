@@ -1,0 +1,118 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import BlogPost from "@/components/BlogPost";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+
+export default function PostPage({ params }: { params: Promise<{ slug: string }> }) {
+    const router = useRouter();
+    const [post, setPost] = useState<any>(null);
+    const [slug, setSlug] = useState<string>("");
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        params.then(p => setSlug(p.slug));
+    }, [params]);
+
+    useEffect(() => {
+        if (!slug) return;
+
+        const fetchPost = async () => {
+            try {
+                const response = await fetch(`/api/posts/${slug}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    // Extract post metadata from the page object
+                    const pageData = data.page || data;
+                    const props = pageData.properties || {};
+
+                    const postData = {
+                        id: pageData.id,
+                        title: props.Name?.title?.[0]?.plain_text || "Untitled",
+                        slug: slug,
+                        date: props.Date?.date?.start || new Date().toISOString(),
+                        tags: props.Tags?.multi_select?.map((tag: any) => tag.name) || [],
+                        category: props.Category?.select?.name || "",
+                        description: props.Description?.rich_text?.[0]?.plain_text || "",
+                        cover: pageData.cover?.file?.url || pageData.cover?.external?.url || "/latest1.png",
+                        readTime: "5 min read",
+                    };
+
+                    setPost(postData);
+                } else {
+                    console.error("Post not found");
+                }
+            } catch (error) {
+                console.error("Error fetching post:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchPost();
+    }, [slug]);
+
+    const handleBack = () => {
+        router.push("/blog");
+    };
+
+    const handleViewChange = (view: string) => {
+        router.push(`/${view === 'home' ? '' : view}`);
+    };
+
+    if (loading) {
+        return (
+            <>
+                <Navbar setCurrentView={handleViewChange} currentView="post" />
+                <div className="min-h-screen flex items-center justify-center bg-white">
+                    <div className="text-center">
+                        {/* Minimal manga-style loader */}
+                        <div className="relative inline-block">
+                            {/* Simple rotating circle */}
+                            <div className="w-16 h-16 border-4 border-gray-200 border-t-black rounded-full animate-spin"></div>
+                        </div>
+
+                        {/* Minimal text */}
+                        <div className="mt-6">
+                            <p className="text-sm uppercase tracking-widest text-gray-400 font-medium">
+                                読み込み中
+                            </p>
+                            <p className="text-xs text-gray-300 mt-1">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+                <Footer onNavClick={handleViewChange} />
+            </>
+        );
+    }
+
+    if (!post) {
+        return (
+            <>
+                <Navbar setCurrentView={handleViewChange} currentView="post" />
+                <div className="min-h-screen flex items-center justify-center">
+                    <div className="text-center">
+                        <h1 className="text-4xl font-bold mb-4">Post Not Found</h1>
+                        <button
+                            onClick={handleBack}
+                            className="px-6 py-2 bg-black text-white font-bold hover:bg-gray-800"
+                        >
+                            Back to Blog
+                        </button>
+                    </div>
+                </div>
+                <Footer onNavClick={handleViewChange} />
+            </>
+        );
+    }
+
+    return (
+        <>
+            <Navbar setCurrentView={handleViewChange} currentView="post" />
+            <BlogPost post={post} onBack={handleBack} />
+            <Footer onNavClick={handleViewChange} />
+        </>
+    );
+}
