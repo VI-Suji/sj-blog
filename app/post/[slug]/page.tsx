@@ -24,7 +24,7 @@ export default function PostPage({ params }: { params: Promise<{ slug: string }>
 
         const fetchPost = async () => {
             try {
-                const response = await fetch(`/api/posts/${slug}`);
+                const response = await fetch(`/api/posts/${slug}`, { cache: 'force-cache' });
                 if (response.ok) {
                     const data = await response.json();
                     // Extract post metadata from the page object

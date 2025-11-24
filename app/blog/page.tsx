@@ -16,7 +16,7 @@ function BlogContent() {
     const selectedCategory = searchParams.get('category');
 
     useEffect(() => {
-        fetch('/api/posts')
+        fetch('/api/posts', { cache: 'force-cache' })
             .then(res => res.json())
             .then(data => setPosts(data));
     }, []);

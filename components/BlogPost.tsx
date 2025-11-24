@@ -21,7 +21,7 @@ export default function BlogPost({ post, onBack }: BlogPostProps) {
     useEffect(() => {
         const fetchContent = async () => {
             try {
-                const response = await fetch(`/api/posts/${post.slug}`);
+                const response = await fetch(`/api/posts/${post.slug}`, { cache: 'force-cache' });
                 if (response.ok) {
                     const data = await response.json();
                     const md = data.markdown || "";
