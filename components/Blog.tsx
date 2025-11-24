@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Bangers } from "next/font/google";
 
 const bangers = Bangers({ subsets: ["latin"], weight: "400" });
@@ -10,11 +11,10 @@ import { BlogPost } from "@/lib/notion";
 
 interface BlogProps {
     posts?: BlogPost[];
-    onPostClick?: (post: BlogPost) => void;
     selectedCategory?: string | null;
 }
 
-export default function Blog({ posts = [], onPostClick, selectedCategory }: BlogProps) {
+export default function Blog({ posts = [], selectedCategory }: BlogProps) {
     const [selectedTag, setSelectedTag] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
     const postsPerPage = 6; // 2 rows of 3 posts
@@ -157,9 +157,9 @@ export default function Blog({ posts = [], onPostClick, selectedCategory }: Blog
                     ))
                 ) : currentPosts.length > 0 ? (
                     currentPosts.map((post, idx) => (
-                        <div
+                        <Link
+                            href={`/post/${post.slug}`}
                             key={idx}
-                            onClick={() => onPostClick && onPostClick(post)}
                             className="bg-white border-4 border-black p-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 active:translate-y-0 active:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer group flex flex-col"
                         >
                             {/* Image */}
@@ -192,7 +192,7 @@ export default function Blog({ posts = [], onPostClick, selectedCategory }: Blog
                                     READ CHAPTER
                                 </button>
                             </div>
-                        </div>
+                        </Link>
                     ))
                 ) : (
                     <div className="col-span-3 text-center py-20">

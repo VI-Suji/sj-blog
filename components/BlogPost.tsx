@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Bangers } from "next/font/google";
 
 const bangers = Bangers({ subsets: ["latin"], weight: "400" });
@@ -10,37 +11,19 @@ import { BlogPost as BlogPostType } from "@/lib/notion";
 
 interface BlogPostProps {
     post: BlogPostType;
-    onBack: () => void;
+    markdownContent: string;
 }
 
-export default function BlogPost({ post, onBack }: BlogPostProps) {
-    const [content, setContent] = useState<string>("");
-    const [loading, setLoading] = useState(true);
+export default function BlogPost({ post, markdownContent }: BlogPostProps) {
     const [readTime, setReadTime] = useState<number | null>(null);
 
     useEffect(() => {
-        const fetchContent = async () => {
-            try {
-                const response = await fetch(`/api/posts/${post.slug}`, { cache: 'force-cache' });
-                if (response.ok) {
-                    const data = await response.json();
-                    const md = data.markdown || "";
-                    setContent(md);
-
-                    // --- Calculate read time ---
-                    const wordCount = md.split(/\s+/).filter(Boolean).length;
-                    const minutes = Math.ceil(wordCount / 100);
-                    setReadTime(minutes);
-                }
-            } catch (error) {
-                console.error("Error fetching post content:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchContent();
-    }, [post.slug]);
+        if (markdownContent) {
+            const wordCount = markdownContent.split(/\s+/).filter(Boolean).length;
+            const minutes = Math.ceil(wordCount / 100);
+            setReadTime(minutes);
+        }
+    }, [markdownContent]);
 
     // Parse inline markdown (bold, italic, links)
     const parseInlineMarkdown = (text: string) => {
@@ -281,13 +264,13 @@ export default function BlogPost({ post, onBack }: BlogPostProps) {
 
                 {/* NAVIGATION */}
                 <div className="mb-12">
-                    <button
-                        onClick={onBack}
-                        className="flex items-center gap-2 px-6 py-2 border-2 border-black font-bold hover:bg-black hover:text-white transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
+                    <Link
+                        href="/blog"
+                        className="flex items-center gap-2 px-6 py-2 border-2 border-black font-bold hover:bg-black hover:text-white transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none w-fit"
                     >
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
                         BACK TO ARCHIVE
-                    </button>
+                    </Link>
                 </div>
 
                 {/* HEADER */}
@@ -354,12 +337,8 @@ export default function BlogPost({ post, onBack }: BlogPostProps) {
 
                 {/* CONTENT */}
                 <article className="max-w-none">
-                    {loading ? (
-                        <div className="text-center py-20">
-                            <p className={`${bangers.className} text-3xl text-gray-400`}>LOADING SCROLL...</p>
-                        </div>
-                    ) : content ? (
-                        renderMarkdown(content)
+                    {markdownContent ? (
+                        renderMarkdown(markdownContent)
                     ) : (
                         <div className="text-center py-20">
                             <p className={`${bangers.className} text-3xl text-gray-400`}>NO CONTENT FOUND</p>

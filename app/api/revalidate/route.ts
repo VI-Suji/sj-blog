@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 
 export async function GET(request: NextRequest) {
     const token = request.nextUrl.searchParams.get('token');
@@ -11,5 +11,6 @@ export async function GET(request: NextRequest) {
     }
 
     revalidatePath('/', 'layout');
+    revalidateTag('posts', 'default');
     return NextResponse.json({ revalidated: true, now: Date.now() });
 }

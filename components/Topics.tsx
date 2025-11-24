@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import Link from "next/link";
 import { Bangers } from "next/font/google";
 
 const bangers = Bangers({ subsets: ["latin"], weight: "400" });
@@ -8,12 +9,10 @@ const bangers = Bangers({ subsets: ["latin"], weight: "400" });
 import { BlogPost } from "@/lib/notion";
 
 interface TopicsProps {
-    onCategoryClick?: (category: string) => void;
-    onPostClick?: (post: BlogPost) => void;
+    posts?: BlogPost[];
 }
 
-export default function Topics({ onCategoryClick, onPostClick }: TopicsProps) {
-    const [posts, setPosts] = useState<BlogPost[]>([]);
+export default function Topics({ posts = [] }: TopicsProps) {
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState<BlogPost[]>([]);
 
@@ -26,13 +25,6 @@ export default function Topics({ onCategoryClick, onPostClick }: TopicsProps) {
         { name: "Books", icon: "📚", color: "bg-pink-50" },
         { name: "Lifestyle", icon: "🌟", color: "bg-orange-50" },
     ];
-
-    useEffect(() => {
-        fetch('/api/posts')
-            .then(res => res.json())
-            .then(data => setPosts(data))
-            .catch(err => console.error('Error fetching posts:', err));
-    }, []);
 
     // Get post count for each category using the actual Category field
     const getCategoryCount = (category: string) => {
@@ -119,10 +111,10 @@ export default function Topics({ onCategoryClick, onPostClick }: TopicsProps) {
                     </h2>
                     <div className="space-y-3">
                         {searchResults.map((post, idx) => (
-                            <div
+                            <Link
                                 key={idx}
-                                onClick={() => onPostClick && onPostClick(post)}
-                                className="bg-white border-2 border-black p-4 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 active:translate-y-0 active:shadow-none active:scale-[0.99] transition-all cursor-pointer"
+                                href={`/post/${post.slug}`}
+                                className="block bg-white border-2 border-black p-4 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 active:translate-y-0 active:shadow-none active:scale-[0.99] transition-all cursor-pointer"
                             >
                                 <h3 className="font-bold text-lg mb-1">{post.title}</h3>
                                 <p className="text-sm text-gray-600 mb-2">{post.description}</p>
@@ -133,7 +125,7 @@ export default function Topics({ onCategoryClick, onPostClick }: TopicsProps) {
                                         </span>
                                     ))}
                                 </div>
-                            </div>
+                            </Link>
                         ))}
                     </div>
                 </div>
@@ -153,9 +145,9 @@ export default function Topics({ onCategoryClick, onPostClick }: TopicsProps) {
                 {categories.map((cat, idx) => {
                     const count = getCategoryCount(cat.name);
                     return (
-                        <div
+                        <Link
                             key={idx}
-                            onClick={() => onCategoryClick && onCategoryClick(cat.name)}
+                            href={`/blog?category=${encodeURIComponent(cat.name)}`}
                             className={`${cat.color} border-2 border-black rounded-full p-4 flex items-center justify-between hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 active:translate-y-0 active:shadow-none active:scale-[0.98] transition-all cursor-pointer group`}
                         >
                             <div className="flex items-center gap-4">
@@ -170,7 +162,7 @@ export default function Topics({ onCategoryClick, onPostClick }: TopicsProps) {
                                     <path d="M5 12h14M12 5l7 7-7 7" />
                                 </svg>
                             </div>
-                        </div>
+                        </Link>
                     );
                 })}
             </div>

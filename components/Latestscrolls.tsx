@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Bangers } from "next/font/google";
 
 const bangers = Bangers({ subsets: ["latin"], weight: "400" });
@@ -7,11 +8,9 @@ import { BlogPost } from "@/lib/notion";
 
 interface LatestScrollsProps {
     posts?: BlogPost[];
-    onPostClick?: (post: BlogPost) => void;
-    onNavClick: (view: string) => void;
 }
 
-export default function LatestScrolls({ posts = [], onPostClick, onNavClick }: LatestScrollsProps) {
+export default function LatestScrolls({ posts = [] }: LatestScrollsProps) {
     const displayPosts = posts.slice(0, 3);
 
     return (
@@ -33,9 +32,9 @@ export default function LatestScrolls({ posts = [], onPostClick, onNavClick }: L
             <div className="grid md:grid-cols-3 gap-6 md:gap-8">
                 {displayPosts.length > 0 ? (
                     displayPosts.map((post, idx) => (
-                        <div
+                        <Link
+                            href={`/post/${post.slug}`}
                             key={idx}
-                            onClick={() => onPostClick && onPostClick(post)}
                             className="border-4 border-black bg-white p-4 flex flex-col hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-y-1 transition-all duration-200 cursor-pointer group"
                         >
                             {/* Image Container */}
@@ -66,7 +65,7 @@ export default function LatestScrolls({ posts = [], onPostClick, onNavClick }: L
                                     Read More
                                 </button>
                             </div>
-                        </div>
+                        </Link>
                     ))
                 ) : (
                     // Skeleton Loader
@@ -90,15 +89,15 @@ export default function LatestScrolls({ posts = [], onPostClick, onNavClick }: L
             </div>
 
             {/* REDIRECT LINK */}
-            <div
-                onClick={() => onNavClick('blog')}
+            <Link
+                href="/blog"
                 className="mt-8 flex items-center gap-2 text-black font-bold hover:underline cursor-pointer w-fit border-b-2 border-transparent hover:border-black active:text-gray-600 active:scale-95 origin-left transition-all text-sm md:text-base"
             >
                 <span>View All Posts</span>
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M1 11L11 1M11 1H1M11 1V11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-            </div>
+            </Link>
         </section>
     );
 }

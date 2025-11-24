@@ -3,23 +3,19 @@ import { Bangers } from "next/font/google";
 
 const bangers = Bangers({ subsets: ["latin"], weight: "400" });
 
-interface FooterProps {
-    onNavClick: (view: string) => void;
-}
-
-export default function Footer({ onNavClick }: FooterProps) {
+export default function Footer() {
     return (
         <footer className="w-full border-t-4 border-black bg-white mt-12 relative z-10">
             <div className="max-w-6xl mx-auto px-6 py-12 flex flex-col md:flex-row items-center justify-between gap-8">
 
                 {/* Left Side: Brand & Links */}
                 <div className="flex flex-col items-center md:items-start gap-4">
-                    <button onClick={() => onNavClick('home')} className={`${bangers.className} text-2xl tracking-wide text-black hover:scale-105 active:scale-95 transition-transform`}>
+                    <Link href="/" className={`${bangers.className} text-2xl tracking-wide text-black hover:scale-105 active:scale-95 transition-transform`}>
                         SUJITH V I
-                    </button>
+                    </Link>
                     <div className="flex gap-6 text-sm font-bold text-gray-600">
-                        <button onClick={() => onNavClick('about')} className="hover:text-black hover:underline decoration-2 underline-offset-4 active:text-gray-900 transition-all">About Me</button>
-                        {/* <button onClick={() => onNavClick('about')} className="hover:text-black hover:underline decoration-2 underline-offset-4 active:text-gray-900 transition-all">Support</button> */}
+                        <Link href="/about" className="hover:text-black hover:underline decoration-2 underline-offset-4 active:text-gray-900 transition-all">About Me</Link>
+                        {/* <Link href="/about" className="hover:text-black hover:underline decoration-2 underline-offset-4 active:text-gray-900 transition-all">Support</Link> */}
                         <a href="mailto:sujithvi06@gmail.com" className="hover:text-black hover:underline decoration-2 underline-offset-4 active:text-gray-900 transition-all">Contact</a>
                     </div>
                 </div>

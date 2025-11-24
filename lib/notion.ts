@@ -95,18 +95,10 @@ export const getPublishedPosts = async (): Promise<BlogPost[]> => {
                 console.error("Error processing cover image for page", page.id, e);
             }
 
-            // Calculate Read Time
-            let readTime = "1 min read";
-            try {
-                const mdblocks = await n2m.pageToMarkdown(page.id);
-                const mdString = n2m.toMarkdownString(mdblocks);
-                const content = mdString.parent || "";
-                const wordCount = content.split(/\s+/).length;
-                const minutes = Math.ceil(wordCount / 100);
-                readTime = `${minutes} min read`;
-            } catch (e) {
-                console.error(`Error calculating read time for page ${page.id}:`, e);
-            }
+            // Calculate Read Time - Simplified for performance
+            // Fetching full markdown for every post in the list is too slow.
+            // We'll use a default or rely on a Notion property if added later.
+            const readTime = "3 min read";
 
             return {
                 id: page.id,

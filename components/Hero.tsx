@@ -3,11 +3,7 @@ import { Bangers } from "next/font/google";
 
 const bangers = Bangers({ subsets: ["latin"], weight: "400" });
 
-interface HeroProps {
-    onNavClick: (view: string) => void;
-}
-
-export default function Hero({ onNavClick }: HeroProps) {
+export default function Hero() {
     return (
         <section className="w-full max-w-6xl mx-auto px-6 py-8">
             {/* MAIN COMIC PANEL */}
