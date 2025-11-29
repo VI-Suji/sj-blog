@@ -2,11 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Bangers } from "next/font/google";
 
-const bangers = Bangers({ subsets: ["latin"], weight: "400" });
-
-import { BlogPost } from "@/lib/notion";
+import { BlogPost } from "@/lib/types";
 
 interface TopicsProps {
     posts?: BlogPost[];
@@ -67,22 +64,28 @@ export default function Topics({ posts = [] }: TopicsProps) {
     return (
         <div className="max-w-2xl mx-auto px-6 py-12 min-h-screen">
 
-            {/* HEADER */}
-            <div className="flex justify-center mb-12">
-                <div className="relative">
-                    {/* Burst Shape (SVG) */}
-                    <svg viewBox="0 0 200 120" className="w-80 h-48 drop-shadow-xl" style={{ overflow: 'visible' }}>
-                        <path d="M10,60 Q20,50 10,40 Q0,30 20,25 Q30,10 50,20 Q70,0 90,15 Q110,0 130,20 Q150,10 160,30 Q180,40 170,60 Q190,80 170,90 Q160,110 140,100 Q120,120 100,105 Q80,120 60,100 Q40,110 30,90 Q10,80 10,60 Z"
-                            fill="white" stroke="black" strokeWidth="3" vectorEffect="non-scaling-stroke" transform="scale(1.1)" />
-                    </svg>
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center pt-4">
-                        <h1 className={`${bangers.className} text-4xl md:text-5xl leading-none transform -rotate-2`}>
-                            THE TOPIC <br /> MANIFEST!
-                        </h1>
-                        <p className="font-serif italic text-sm mt-1">Find Your Focus!</p>
+            {/* HEADER - MANGA STYLE */}
+            <header className="mb-20 relative text-center">
+                {/* Speed lines radiating from center */}
+                <div className="absolute inset-0 opacity-10 pointer-events-none overflow-hidden">
+                    <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_4px,#000_4px,#000_5px)] transform -skew-y-12"></div>
+                </div>
+
+                <div className="relative inline-block">
+                    <h1 className="text-6xl md:text-7xl font-black text-gray-900 mb-2 tracking-tight uppercase">
+                        TOPICS
+                    </h1>
+                    {/* Manga-style underline accent */}
+                    <div className="flex gap-1 justify-center mt-2">
+                        <span className="w-12 h-1 bg-black"></span>
+                        <span className="w-8 h-1 bg-black"></span>
+                        <span className="w-4 h-1 bg-black"></span>
                     </div>
                 </div>
-            </div>
+                <p className="text-lg text-gray-600 mt-6 font-medium">
+                    Find Your Focus
+                </p>
+            </header>
 
             {/* SEARCH BAR */}
             <div className="relative mb-12 max-w-md mx-auto">
@@ -106,7 +109,7 @@ export default function Topics({ posts = [] }: TopicsProps) {
             {/* SEARCH RESULTS */}
             {searchResults.length > 0 && (
                 <div className="mb-12">
-                    <h2 className={`${bangers.className} text-2xl mb-4`}>
+                    <h2 className="font-black text-2xl mb-4">
                         SEARCH RESULTS ({searchResults.length})
                     </h2>
                     <div className="space-y-3">
@@ -133,7 +136,7 @@ export default function Topics({ posts = [] }: TopicsProps) {
 
             {/* EXPLORE CATEGORIES */}
             <div className="text-center mb-8">
-                <h2 className={`${bangers.className} text-3xl inline-flex items-center gap-4`}>
+                <h2 className="font-black text-3xl inline-flex items-center gap-4">
                     <span className="h-1 w-8 bg-black rounded-full"></span>
                     EXPLORE CATEGORIES
                     <span className="h-1 w-8 bg-black rounded-full"></span>
@@ -153,7 +156,7 @@ export default function Topics({ posts = [] }: TopicsProps) {
                             <div className="flex items-center gap-4">
                                 <div className="text-2xl w-10 text-center">{cat.icon}</div>
                                 <div className="flex flex-col">
-                                    <span className={`${bangers.className} text-xl tracking-wide group-hover:text-gray-700 uppercase`}>{cat.name}</span>
+                                    <span className="font-black text-xl tracking-wide group-hover:text-gray-700 uppercase">{cat.name}</span>
                                     <span className="text-xs font-bold text-gray-500">{count} Scroll{count !== 1 ? 's' : ''}</span>
                                 </div>
                             </div>

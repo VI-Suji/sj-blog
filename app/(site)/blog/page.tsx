@@ -1,8 +1,7 @@
 import Blog from "@/components/Blog";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-
-import { getPublishedPosts } from "@/lib/notion";
+import { getPublishedPosts } from "@/lib/sanity.queries";
 
 async function BlogContent({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
     const posts = await getPublishedPosts();

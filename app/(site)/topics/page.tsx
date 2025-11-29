@@ -1,7 +1,7 @@
 import Topics from "@/components/Topics";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { getPublishedPosts } from "@/lib/notion";
+import { getPublishedPosts } from "@/lib/sanity.queries";
 
 export default async function TopicsPage() {
     const posts = await getPublishedPosts();

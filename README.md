@@ -1,6 +1,6 @@
 # 📚 Comic Book Style Blog
 
-A unique, visually striking blog built with Next.js and Notion as a CMS, featuring a bold comic book aesthetic with the Bangers font and dynamic content management.
+A unique, visually striking blog built with Next.js, featuring a bold comic book aesthetic with the Bangers font and dynamic content management.
 
 ![Blog Preview](./public/latest1.png)
 
@@ -24,7 +24,7 @@ Each page has its own clean, shareable URL!
 - Manga/comic-inspired design elements
 
 ### 📝 **Content Management**
-- **Notion as CMS**: Manage all blog content directly in Notion
+- **Sanity CMS**: Manage all blog content with Sanity Studio (Coming Soon)
 - **Real-time Updates**: Content syncs automatically
 - **Rich Text Support**: Bold, italic, links, code blocks, lists, quotes
 - **Category System**: Organize posts by Technology, Photography, Travel, etc.
@@ -37,19 +37,23 @@ Each page has its own clean, shareable URL!
 - **Tag Filtering**: Filter by specific tags
 - **Clickable Results**: Direct navigation to posts from search
 
-### 📱 **User Experience**
-- **Responsive Design**: Works perfectly on mobile, tablet, and desktop
-- **Loading Skeletons**: Smooth loading experience
-- **Pagination**: Easy navigation through posts
-- **Active Filter Indicators**: Clear visual feedback
-- **Smooth Scrolling**: Polished page transitions
+### 🛠️ **Admin Panel (New)**
+- **Custom Dashboard**: Manage posts at `/admin`
+- **Markdown Editor**: Simplified writing experience
+- **Post Management**: Create, edit, and publish posts
+
+### 📝 **Content Management**
+- **Sanity CMS**: Manage all blog content with Sanity Studio (`/studio`)
+- **Real-time Updates**: Content syncs automatically
+- **Rich Text Support**: Bold, italic, links, code blocks, lists, quotes
+- **Category System**: Organize posts by Technology, Photography, Travel, etc.
+- **Tag System**: Multiple tags per post for better organization
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 - Node.js 18+ installed
-- A Notion account
-- Notion API key
+- A Sanity account (to be set up)
 
 ### Installation
 
@@ -64,16 +68,21 @@ cd blog-updated
 npm install
 ```
 
-3. **Set up Notion**
-   - Create a Notion database
-   - Add the required fields (see Database Setup below)
-   - Get your Notion API key and Database ID
+3. **Set up Sanity CMS**
+   - Follow Sanity setup instructions (Coming Soon)
+   - Configure your Sanity project
+   - Get your Sanity project ID and dataset
 
 4. **Configure environment variables**
 Create a `.env.local` file:
 ```env
-NOTION_SECRET=your_notion_api_key
-NOTION_DATABASE_ID=your_database_id
+# Sanity configuration
+NEXT_PUBLIC_SANITY_PROJECT_ID=gisuef4d
+NEXT_PUBLIC_SANITY_DATASET=production
+NEXT_PUBLIC_SANITY_API_VERSION=2024-11-29
+
+# Required for Custom Admin Panel (/admin)
+NEXT_PUBLIC_SANITY_API_TOKEN=your_write_token
 ```
 
 5. **Run the development server**
@@ -84,23 +93,25 @@ npm run dev
 6. **Open your browser**
 Navigate to [http://localhost:3000](http://localhost:3000)
 
-## 📊 Notion Database Setup
+## 📊 Sanity Schema Setup (Coming Soon)
 
-### Required Fields
+The blog will use the following content structure:
+
+### Blog Post Schema
 
 | Field Name | Type | Description |
 |------------|------|-------------|
-| Name | Title | Post title |
-| Slug | Text | URL-friendly identifier (e.g., `my-first-post`) |
-| Date | Date | Publication date |
-| Description | Rich Text | Short summary/excerpt |
-| Tags | Multi-select | Post tags (TECH, THOUGHTS, BOOKS, PICTURES) |
-| Category | Select | Post category |
-| Published | Checkbox | Publish status |
-| Cover | File/URL | Cover image (optional) |
+| title | String | Post title |
+| slug | Slug | URL-friendly identifier |
+| publishedAt | DateTime | Publication date |
+| description | Text | Short summary/excerpt |
+| tags | Array | Post tags (TECH, THOUGHTS, BOOKS, PICTURES) |
+| category | String | Post category |
+| published | Boolean | Publish status |
+| coverImage | Image | Cover image |
+| content | Block Content | Rich text content |
 
 ### Category Options
-Add these options to your Category field:
 - Technology
 - Photography
 - Random Thoughts
@@ -109,47 +120,35 @@ Add these options to your Category field:
 - Lifestyle
 
 ### Tag Options
-Add these options to your Tags field:
 - TECH
 - THOUGHTS
 - BOOKS
 - PICTURES
 
-## 📝 Creating Blog Posts
+## 📝 Creating Blog Posts (Coming Soon)
 
-1. **In Notion**, create a new page in your database
-2. **Fill in the properties**:
-   - Name: Your post title
-   - Slug: URL-friendly version (e.g., `amazing-photography-tips`)
-   - Date: Publication date
-   - Description: Brief summary
-   - Tags: Select relevant tags
-   - Category: Choose a category
-   - Published: ✅ Check this box
-   - Cover: Add a cover image (optional)
+Once Sanity is integrated:
 
-3. **Write your content** inside the Notion page using:
-   - Headers: `# H1`, `## H2`, `### H3`
-   - **Bold**: `**text**`
-   - *Italic*: `*text*`
-   - Links: `[text](url)`
-   - Code blocks: ` ```language `
-   - Lists: `- item` or `1. item`
-   - Quotes: `> quote text`
-
-4. **Refresh your blog** - the post will appear automatically!
+1. **Access Sanity Studio** at `/studio`
+2. **Create a new post** with all required fields
+3. **Write your content** using the rich text editor
+4. **Publish** - the post will appear automatically!
 
 ## 🎯 Project Structure
 
 ```
 blog-updated/
 ├── app/
-│   ├── api/
-│   │   └── posts/
-│   │       ├── route.ts          # Fetch all posts
-│   │       └── [slug]/route.ts   # Fetch single post
 │   ├── layout.tsx
-│   └── page.tsx                  # Main app component
+│   ├── page.tsx                  # Homepage
+│   ├── blog/
+│   │   └── page.tsx              # Blog listing
+│   ├── post/
+│   │   └── [slug]/page.tsx       # Individual post
+│   ├── topics/
+│   │   └── page.tsx              # Topics/search page
+│   └── about/
+│       └── page.tsx              # About page
 ├── components/
 │   ├── About.tsx                 # About page
 │   ├── Blog.tsx                  # Blog listing with filters
@@ -158,10 +157,9 @@ blog-updated/
 │   ├── Hero.tsx                  # Homepage hero
 │   ├── Latestscrolls.tsx         # Latest posts section
 │   ├── Navbar.tsx                # Navigation bar
-│   ├── Topics.tsx                # Search & categories
-│   └── SEO.tsx                   # SEO meta tags
+│   └── Topics.tsx                # Search & categories
 ├── lib/
-│   └── notion.ts                 # Notion API integration
+│   └── types.ts                  # TypeScript types
 ├── public/                       # Static assets
 ├── .env.local                    # Environment variables
 └── package.json
@@ -172,7 +170,7 @@ blog-updated/
 - **Framework**: Next.js 16 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
-- **CMS**: Notion API
+- **CMS**: Sanity (To be integrated)
 - **Fonts**: Google Fonts (Bangers)
 - **Markdown**: Custom renderer with inline formatting
 
@@ -202,27 +200,20 @@ const yourFont = YourFont({ subsets: ["latin"], weight: "400" });
 - **Efficient Filtering**: Minimal re-renders
 - **Loading States**: Skeleton loaders for better UX
 
-## 🔒 Security
+## 🔄 Migration Status
 
-- API keys stored in environment variables
-- Server-side API routes protect secrets
-- No sensitive data exposed to client
+✅ **Completed:**
+- Removed Notion backend dependencies
+- Cleaned up API routes
+- Updated component imports
+- Removed environment variable dependencies
 
-## 🐛 Troubleshooting
-
-### Posts showing same content
-- Ensure each post has a unique **Slug** value in Notion
-- Check that content is added inside the Notion page (not just properties)
-
-### Posts not appearing
-- Verify **Published** checkbox is checked
-- Check `.env.local` has correct credentials
-- Ensure Notion integration has access to the database
-
-### Search not working
-- Clear browser cache
-- Check console for errors
-- Verify posts have content in searchable fields
+🚧 **To Do:**
+- Set up Sanity CMS
+- Create Sanity schemas
+- Implement Sanity data fetching
+- Set up Sanity Studio
+- Configure image handling with Sanity
 
 ## 📄 License
 
@@ -241,4 +232,4 @@ For questions or support, reach out to [your-email@example.com]
 
 ---
 
-**Built with ❤️ using Next.js and Notion**
+**Built with ❤️ using Next.js**

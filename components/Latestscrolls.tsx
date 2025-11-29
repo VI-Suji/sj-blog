@@ -1,10 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Bangers } from "next/font/google";
 
-const bangers = Bangers({ subsets: ["latin"], weight: "400" });
-
-import { BlogPost } from "@/lib/notion";
+import { BlogPost } from "@/lib/types";
 
 interface LatestScrollsProps {
     posts?: BlogPost[];
@@ -15,18 +12,25 @@ export default function LatestScrolls({ posts = [] }: LatestScrollsProps) {
 
     return (
         <section className="max-w-6xl mx-auto px-6 py-12">
-            {/* HEADER */}
-            <div className="flex justify-start mb-16">
-                <div className="relative bg-white p-6 transform -rotate-1">
-                    {/* Double border effect */}
-                    <div className="absolute inset-0 border-4 border-black transform translate-x-1 translate-y-1"></div>
-                    <div className="absolute inset-0 border-4 border-black"></div>
+            {/* HEADER - MANGA STYLE */}
+            <header className="mb-16 relative">
+                {/* Speed lines radiating from center */}
+                <div className="absolute inset-0 opacity-10 pointer-events-none overflow-hidden">
+                    <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_4px,#000_4px,#000_5px)] transform -skew-y-12"></div>
+                </div>
 
-                    <h2 className={`${bangers.className} relative z-10 text-4xl md:text-7xl text-center uppercase tracking-wider px-8`}>
+                <div className="relative inline-block">
+                    <h2 className="text-6xl md:text-7xl font-black text-gray-900 mb-2 tracking-tight uppercase">
                         LATEST SCROLLS
                     </h2>
+                    {/* Manga-style underline accent */}
+                    <div className="flex gap-1 mt-2">
+                        <span className="w-12 h-1 bg-black"></span>
+                        <span className="w-8 h-1 bg-black"></span>
+                        <span className="w-4 h-1 bg-black"></span>
+                    </div>
                 </div>
-            </div>
+            </header>
 
             {/* CARDS */}
             <div className="grid md:grid-cols-3 gap-6 md:gap-8">
@@ -50,10 +54,10 @@ export default function LatestScrolls({ posts = [] }: LatestScrollsProps) {
 
                             {/* Content */}
                             <div className="flex-1 flex flex-col">
-                                <h3 className={`${bangers.className} text-2xl leading-none mb-2 group-hover:underline truncate md:whitespace-normal`}>{post.title}</h3>
+                                <h3 className="font-black text-2xl leading-none mb-2 group-hover:underline truncate md:whitespace-normal">{post.title}</h3>
 
                                 <div className="text-xs font-bold text-gray-500 mb-4 flex justify-between border-b-2 border-gray-100 pb-2">
-                                    <span>{new Date(post.date).toLocaleDateString()}</span>
+                                    <span>{new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                                     <span>{post.readTime || "5 min read"}</span>
                                 </div>
 

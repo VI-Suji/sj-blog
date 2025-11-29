@@ -3,11 +3,8 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Bangers } from "next/font/google";
 
-const bangers = Bangers({ subsets: ["latin"], weight: "400" });
-
-import { BlogPost as BlogPostType } from "@/lib/notion";
+import { BlogPost as BlogPostType } from "@/lib/types";
 
 interface BlogPostProps {
     post: BlogPostType;
@@ -16,44 +13,53 @@ interface BlogPostProps {
 
 export default function BlogPost({ post, markdownContent }: BlogPostProps) {
     const [readTime, setReadTime] = useState<number | null>(null);
+    const [scrollProgress, setScrollProgress] = useState(0);
 
     useEffect(() => {
         if (markdownContent) {
             const wordCount = markdownContent.split(/\s+/).filter(Boolean).length;
-            const minutes = Math.ceil(wordCount / 100);
+            const minutes = Math.ceil(wordCount / 200);
             setReadTime(minutes);
         }
     }, [markdownContent]);
 
-    // Parse inline markdown (bold, italic, links)
+    useEffect(() => {
+        const handleScroll = () => {
+            const totalScroll = document.documentElement.scrollTop;
+            const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scroll = `${totalScroll / windowHeight}`;
+            setScrollProgress(Number(scroll));
+        }
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    // Parse inline markdown
     const parseInlineMarkdown = (text: string) => {
         const elements: React.ReactNode[] = [];
         let remaining = text;
         let key = 0;
 
-        // Process the text character by character
         while (remaining.length > 0) {
-            // Check for bold (**text**)
             const boldMatch = remaining.match(/^\*\*(.+?)\*\*/);
             if (boldMatch) {
-                elements.push(<strong key={`bold-${key++}`}>{boldMatch[1]}</strong>);
+                elements.push(<strong key={`bold-${key++}`} className="font-black text-gray-900">{boldMatch[1]}</strong>);
                 remaining = remaining.slice(boldMatch[0].length);
                 continue;
             }
 
-            // Check for italic (*text*)
             const italicMatch = remaining.match(/^\*(.+?)\*/);
             if (italicMatch) {
-                elements.push(<em key={`italic-${key++}`}>{italicMatch[1]}</em>);
+                elements.push(<em key={`italic-${key++}`} className="italic text-gray-800">{italicMatch[1]}</em>);
                 remaining = remaining.slice(italicMatch[0].length);
                 continue;
             }
 
-            // Check for links [text](url)
             const linkMatch = remaining.match(/^\[(.+?)\]\((.+?)\)/);
             if (linkMatch) {
                 elements.push(
-                    <a key={`link-${key++}`} href={linkMatch[2]} className="text-blue-600 underline hover:text-blue-800" target="_blank" rel="noopener noreferrer">
+                    <a key={`link-${key++}`} href={linkMatch[2]} className="text-black underline decoration-2 hover:bg-black hover:text-white transition-all px-1" target="_blank" rel="noopener noreferrer">
                         {linkMatch[1]}
                     </a>
                 );
@@ -61,18 +67,14 @@ export default function BlogPost({ post, markdownContent }: BlogPostProps) {
                 continue;
             }
 
-            // No match, add the character and continue
             const nextSpecialChar = remaining.search(/[\*\[]/);
             if (nextSpecialChar === -1) {
-                // No more special characters, add the rest
                 elements.push(remaining);
                 break;
             } else if (nextSpecialChar > 0) {
-                // Add text up to the next special character
                 elements.push(remaining.slice(0, nextSpecialChar));
                 remaining = remaining.slice(nextSpecialChar);
             } else {
-                // Special character didn't match, add it and continue
                 elements.push(remaining[0]);
                 remaining = remaining.slice(1);
             }
@@ -81,7 +83,7 @@ export default function BlogPost({ post, markdownContent }: BlogPostProps) {
         return elements.length > 0 ? elements : [text];
     };
 
-    // Simple Markdown renderer for common patterns
+    // Markdown renderer with manga styling
     const renderMarkdown = (markdown: string) => {
         const lines = markdown.split('\n');
         const elements: React.ReactElement[] = [];
@@ -97,7 +99,7 @@ export default function BlogPost({ post, markdownContent }: BlogPostProps) {
             if (currentParagraph.length > 0) {
                 const text = currentParagraph.join(' ');
                 elements.push(
-                    <p key={elements.length} className="text-base md:text-lg leading-relaxed text-gray-800 font-normal mb-6">
+                    <p key={elements.length} className="text-lg leading-8 text-gray-800 mb-6 font-medium">
                         {parseInlineMarkdown(text)}
                     </p>
                 );
@@ -109,10 +111,15 @@ export default function BlogPost({ post, markdownContent }: BlogPostProps) {
             if (listItems.length > 0) {
                 const ListTag = listType;
                 elements.push(
-                    <div key={elements.length} className="my-6 border-l-4 border-black pl-6 bg-yellow-50/30 py-3">
-                        <ListTag className={`space-y-2 text-base md:text-lg text-gray-800 font-normal ${listType === 'ol' ? 'list-decimal ml-6' : 'list-disc ml-6'}`}>
+                    <div key={elements.length} className="mb-8 border-l-4 border-black pl-6">
+                        <ListTag className={`space-y-3 text-lg text-gray-800 ${listType === 'ol' ? 'list-decimal' : 'list-none'}`}>
                             {listItems.map((item, i) => (
-                                <li key={i} className="pl-2">{item}</li>
+                                <li key={i} className="flex items-start gap-3">
+                                    {listType === 'ul' && (
+                                        <span className="mt-1.5 flex-shrink-0 w-2 h-2 bg-black transform rotate-45"></span>
+                                    )}
+                                    <span>{parseInlineMarkdown(item)}</span>
+                                </li>
                             ))}
                         </ListTag>
                     </div>
@@ -132,19 +139,22 @@ export default function BlogPost({ post, markdownContent }: BlogPostProps) {
                     codeLanguage = line.slice(3).trim();
                 } else {
                     elements.push(
-                        <div key={elements.length} className="my-10 border-4 border-black bg-gray-900 p-6 md:p-8 overflow-x-auto shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative">
-                            <div className="absolute top-2 left-2 w-2 h-2 rounded-full bg-gray-600"></div>
-                            <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-gray-600"></div>
-                            <div className="absolute bottom-2 left-2 w-2 h-2 rounded-full bg-gray-600"></div>
-                            <div className="absolute bottom-2 right-2 w-2 h-2 rounded-full bg-gray-600"></div>
+                        <div key={elements.length} className="my-10 border-2 border-black bg-gray-900 shadow-[6px_6px_0px_0px_rgba(0,0,0,0.3)]">
                             {codeLanguage && (
-                                <div className="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
-                                    <span className={`${bangers.className} text-xl text-yellow-400 tracking-wider uppercase`}>{codeLanguage}</span>
+                                <div className="px-4 py-2 bg-black border-b-2 border-gray-700 flex items-center justify-between">
+                                    <span className="text-xs font-black text-white uppercase tracking-wider">{codeLanguage}</span>
+                                    <div className="flex gap-1.5">
+                                        <div className="w-2.5 h-2.5 bg-white"></div>
+                                        <div className="w-2.5 h-2.5 bg-white"></div>
+                                        <div className="w-2.5 h-2.5 bg-white"></div>
+                                    </div>
                                 </div>
                             )}
-                            <pre className="text-sm md:text-base font-mono text-green-400 leading-relaxed">
-                                <code>{codeContent.join('\n')}</code>
-                            </pre>
+                            <div className="p-6 overflow-x-auto">
+                                <pre className="text-sm md:text-base font-mono text-gray-300 leading-relaxed">
+                                    <code>{codeContent.join('\n')}</code>
+                                </pre>
+                            </div>
                         </div>
                     );
                     inCodeBlock = false;
@@ -179,7 +189,6 @@ export default function BlogPost({ post, markdownContent }: BlogPostProps) {
                 listItems.push(line.replace(/^\d+\.\s+/, ''));
                 return;
             } else if (inList && line.trim() !== '') {
-                // Continue list item on next line
                 if (listItems.length > 0) {
                     listItems[listItems.length - 1] += ' ' + line;
                     return;
@@ -193,7 +202,7 @@ export default function BlogPost({ post, markdownContent }: BlogPostProps) {
                 flushParagraph();
                 flushList();
                 elements.push(
-                    <h1 key={elements.length} className={`${bangers.className} text-3xl md:text-5xl text-black mb-6 mt-12 leading-tight tracking-wide border-b-4 border-black pb-4 uppercase`}>
+                    <h1 key={elements.length} className="text-4xl md:text-5xl font-black text-gray-900 mt-12 mb-6 tracking-tight uppercase border-b-4 border-black pb-4">
                         {line.slice(2)}
                     </h1>
                 );
@@ -201,7 +210,7 @@ export default function BlogPost({ post, markdownContent }: BlogPostProps) {
                 flushParagraph();
                 flushList();
                 elements.push(
-                    <h2 key={elements.length} className={`${bangers.className} text-2xl md:text-4xl text-black mb-5 mt-10 leading-tight tracking-wide border-l-4 border-black pl-4 uppercase`}>
+                    <h2 key={elements.length} className="text-3xl md:text-4xl font-black text-gray-900 mt-10 mb-5 tracking-tight uppercase border-l-4 border-black pl-4">
                         {line.slice(3)}
                     </h2>
                 );
@@ -209,7 +218,7 @@ export default function BlogPost({ post, markdownContent }: BlogPostProps) {
                 flushParagraph();
                 flushList();
                 elements.push(
-                    <h3 key={elements.length} className={`${bangers.className} text-xl md:text-3xl text-black mb-4 mt-8 leading-tight tracking-wide uppercase`}>
+                    <h3 key={elements.length} className="text-2xl md:text-3xl font-black text-gray-900 mt-8 mb-4 tracking-tight uppercase">
                         {line.slice(4)}
                     </h3>
                 );
@@ -219,13 +228,12 @@ export default function BlogPost({ post, markdownContent }: BlogPostProps) {
                 flushParagraph();
                 flushList();
                 elements.push(
-                    <div key={elements.length} className="my-10 relative p-6 md:p-8 border-4 border-black bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-                        <div className="absolute top-4 left-4 text-5xl text-gray-200 font-serif leading-none">&quot;</div>
-                        <blockquote className="text-xl md:text-2xl font-bold italic text-black leading-relaxed text-center relative z-10 py-2">
+                    <blockquote key={elements.length} className="my-10 pl-8 border-l-4 border-black bg-gray-50 p-6 relative">
+                        <div className="absolute top-4 left-4 text-6xl text-black opacity-20 font-black">"</div>
+                        <p className="text-xl md:text-2xl font-bold text-gray-900 leading-relaxed relative z-10">
                             {line.slice(2)}
-                        </blockquote>
-                        <div className="absolute -bottom-4 left-8 w-6 h-6 bg-white border-r-4 border-b-4 border-black transform rotate-45"></div>
-                    </div>
+                        </p>
+                    </blockquote>
                 );
             }
             // Horizontal rule
@@ -233,10 +241,10 @@ export default function BlogPost({ post, markdownContent }: BlogPostProps) {
                 flushParagraph();
                 flushList();
                 elements.push(
-                    <div key={elements.length} className="my-10 flex items-center justify-center gap-4">
-                        <div className="h-1 bg-black w-full max-w-[80px]"></div>
-                        <div className="w-3 h-3 bg-black transform rotate-45"></div>
-                        <div className="h-1 bg-black w-full max-w-[80px]"></div>
+                    <div key={elements.length} className="my-12 flex items-center justify-center gap-2">
+                        <div className="w-2 h-2 bg-black transform rotate-45"></div>
+                        <div className="w-2 h-2 bg-black transform rotate-45"></div>
+                        <div className="w-2 h-2 bg-black transform rotate-45"></div>
                     </div>
                 );
             }
@@ -259,109 +267,146 @@ export default function BlogPost({ post, markdownContent }: BlogPostProps) {
     };
 
     return (
-        <div className="min-h-screen bg-white">
-            <div className="max-w-4xl mx-auto px-6 md:px-12 py-12 md:py-20">
+        <div className="min-h-screen bg-white relative overflow-hidden">
+            {/* Manga halftone background */}
+            <div className="fixed inset-0 opacity-[0.02] pointer-events-none z-0"
+                style={{
+                    backgroundImage: 'radial-gradient(circle, #000 1px, transparent 1px)',
+                    backgroundSize: '20px 20px'
+                }}
+            ></div>
 
+            {/* Reading Progress Bar - Manga style */}
+            <div className="fixed top-0 left-0 w-full h-2 z-50 bg-gray-200 border-b-2 border-black">
+                <div
+                    className="h-full bg-black transition-all duration-100 ease-out"
+                    style={{ width: `${scrollProgress * 100}%` }}
+                />
+            </div>
+
+            <article className="relative z-10 max-w-4xl mx-auto px-6 py-12 md:py-20">
                 {/* NAVIGATION */}
                 <div className="mb-12">
                     <Link
                         href="/blog"
-                        className="flex items-center gap-2 px-6 py-2 border-2 border-black font-bold hover:bg-black hover:text-white transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none w-fit"
+                        className="inline-flex items-center text-sm font-black uppercase tracking-wide text-gray-900 hover:bg-black hover:text-white transition-all px-4 py-2 border-2 border-black"
                     >
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
-                        BACK TO ARCHIVE
+                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M15 19l-7-7 7-7" /></svg>
+                        Back to Archive
                     </Link>
                 </div>
 
-                {/* HEADER */}
-                <header className="mb-12 border-b-4 border-black pb-6">
-                    {post.cover && (
-                        <div className="relative w-full aspect-video border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] mb-6">
-                            <Image
-                                src={post.cover}
-                                alt={post.title}
-                                fill
-                                className="object-cover"
-                                unoptimized
-                            />
-                        </div>
-                    )}
+                {/* HEADER - MANGA TITLE PAGE STYLE */}
+                <header className="mb-16 border-2 border-black p-8 bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] relative">
+                    {/* Speed lines in background */}
+                    <div className="absolute inset-0 opacity-5 pointer-events-none overflow-hidden">
+                        <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_4px,#000_4px,#000_5px)] transform -skew-y-12"></div>
+                    </div>
 
-                    <h1 className={`${bangers.className} text-4xl md:text-6xl text-black mb-4 leading-tight tracking-wide`}>
-                        {post.title}
-                    </h1>
-
-                    {post.description && (
-                        <p className="text-lg md:text-xl font-bold text-gray-600 mb-6 italic">
-                            {post.description}
-                        </p>
-                    )}
-
-                    <div className="flex flex-wrap items-center gap-3 md:gap-4">
-                        <div className="flex items-center gap-2 border-2 border-black px-3 py-1.5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-white">
-                            <svg
-                                width="18"
-                                height="18"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="black"
-                                strokeWidth="2.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            >
-                                <path d="M12 20h9" />
-                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
-                            </svg>
-                            <span className="font-bold uppercase tracking-wider text-xs">Sujith</span>
-                        </div>
-                        <div className="font-bold text-gray-500 uppercase tracking-wider text-xs">
-                            {new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                        </div>
-                        <div className="font-bold text-gray-500 uppercase tracking-wider text-xs">
-                            • {readTime ? `${readTime} min read` : "—"}
+                    <div className="relative z-10">
+                        <div className="flex items-center justify-center gap-3 mb-6 flex-wrap">
+                            {post.category && (
+                                <span className="px-4 py-1 bg-black text-white text-xs font-black uppercase tracking-wider border-2 border-black">
+                                    {post.category}
+                                </span>
+                            )}
+                            {readTime && (
+                                <span className="text-gray-600 text-xs font-black uppercase tracking-wider">
+                                    • {readTime} min read
+                                </span>
+                            )}
                         </div>
 
-                        {/* Tags inline */}
-                        {post.tags && post.tags.length > 0 && (
-                            <>
-                                <div className="hidden md:block h-4 w-px bg-gray-300"></div>
-                                {post.tags.map((tag, idx) => (
-                                    <span key={idx} className="px-3 py-1 border-2 border-black bg-white font-bold text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                        {tag}
-                                    </span>
-                                ))}
-                            </>
+                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-6 leading-tight tracking-tight text-center uppercase">
+                            {post.title}
+                        </h1>
+
+                        {/* Manga-style underline accent */}
+                        <div className="flex gap-1 justify-center mb-6">
+                            <span className="w-16 h-1 bg-black"></span>
+                            <span className="w-12 h-1 bg-black"></span>
+                            <span className="w-6 h-1 bg-black"></span>
+                        </div>
+
+                        {post.description && (
+                            <p className="text-xl text-gray-700 mb-8 font-medium leading-relaxed text-center max-w-2xl mx-auto">
+                                {post.description}
+                            </p>
                         )}
+
+                        <div className="flex items-center justify-center gap-4 pt-6 border-t-2 border-black">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 bg-black text-white flex items-center justify-center font-black text-lg border-2 border-black">
+                                    S
+                                </div>
+                                <div className="text-left">
+                                    <div className="font-black text-gray-900 text-sm uppercase">Sujith</div>
+                                    <div className="text-gray-600 text-xs font-bold">
+                                        {new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </header>
 
+                {/* COVER IMAGE - MANGA PANEL STYLE */}
+                {post.cover && (
+                    <div className="relative w-full aspect-[16/9] mb-16 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] overflow-hidden">
+                        <Image
+                            src={post.cover}
+                            alt={post.title}
+                            fill
+                            className="object-cover"
+                            priority
+                            unoptimized
+                        />
+                        {/* Corner decoration */}
+                        <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-white"></div>
+                        <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-white"></div>
+                    </div>
+                )}
+
                 {/* CONTENT */}
-                <article className="max-w-none">
+                <div className="prose prose-lg md:prose-xl max-w-none">
                     {markdownContent ? (
                         renderMarkdown(markdownContent)
                     ) : (
-                        <div className="text-center py-20">
-                            <p className={`${bangers.className} text-3xl text-gray-400`}>NO CONTENT FOUND</p>
+                        <div className="text-center py-20 border-2 border-black bg-gray-50">
+                            <p className="text-gray-600 font-black uppercase">No content available</p>
                         </div>
                     )}
-                </article>
-
-                {/* FOOTER / SHARE */}
-                <div className="mt-20 pt-10 border-t-4 border-black border-dashed">
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                        <span className={`${bangers.className} text-3xl`}>ENJOYED THE READ?</span>
-                        <div className="flex gap-4">
-                            <button className="w-12 h-12 border-2 border-black flex items-center justify-center hover:bg-black hover:text-white transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" /></svg>
-                            </button>
-                            <button className="w-12 h-12 border-2 border-black flex items-center justify-center hover:bg-black hover:text-white transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" /></svg>
-                            </button>
-                        </div>
-                    </div>
                 </div>
 
-            </div>
+                {/* TAGS */}
+                {post.tags && post.tags.length > 0 && (
+                    <div className="mt-16 pt-8 border-t-2 border-black">
+                        <div className="flex flex-wrap gap-3">
+                            {post.tags.map((tag, idx) => (
+                                <span key={idx} className="px-4 py-2 bg-white text-gray-800 text-sm font-bold border-2 border-black hover:bg-black hover:text-white transition-all cursor-default shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                                    #{tag}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* FOOTER - TO BE CONTINUED STYLE */}
+                <div className="mt-16 border-2 border-black p-8 bg-black text-white shadow-[8px_8px_0px_0px_rgba(0,0,0,0.3)] relative">
+                    <div className="absolute top-0 right-0 w-0 h-0 border-l-[40px] border-l-transparent border-t-[40px] border-t-white opacity-20"></div>
+
+                    <h3 className="text-2xl font-black mb-4 uppercase tracking-wide">End of Chapter</h3>
+                    <p className="text-white/90 mb-6 font-medium">Enjoyed this post? Share it with your network or check out more posts.</p>
+                    <div className="flex gap-4">
+                        <Link
+                            href="/blog"
+                            className="px-6 py-3 bg-white text-black font-black uppercase tracking-wide border-2 border-white hover:bg-black hover:text-white hover:border-white transition-all"
+                        >
+                            More Posts →
+                        </Link>
+                    </div>
+                </div>
+            </article>
         </div>
     );
 }

@@ -3,11 +3,8 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Bangers } from "next/font/google";
 
-const bangers = Bangers({ subsets: ["latin"], weight: "400" });
-
-import { BlogPost } from "@/lib/notion";
+import { BlogPost } from "@/lib/types";
 
 interface BlogProps {
     posts?: BlogPost[];
@@ -18,7 +15,7 @@ export default function Blog({ posts = [], selectedCategory }: BlogProps) {
     const [selectedTag, setSelectedTag] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
     const postsPerPage = 6; // 2 rows of 3 posts
-    const isLoading = posts.length === 0;
+    const isLoading = false;
 
     // Filter by category first, then by tag
     let filteredPosts = posts;
@@ -59,46 +56,48 @@ export default function Blog({ posts = [], selectedCategory }: BlogProps) {
 
     return (
         <section className="max-w-6xl mx-auto px-6 py-12">
-            {/* HEADER & FILTERS CONTAINER */}
-            <div className="flex flex-col md:flex-row items-center md:items-end justify-between mb-16 gap-8">
-
-                {/* HEADER TITLE */}
-                <div className="relative bg-white p-6 transform -rotate-1">
-                    {/* Double border effect */}
-                    <div className="absolute inset-0 border-4 border-black transform translate-x-1 translate-y-1"></div>
-                    <div className="absolute inset-0 border-4 border-black"></div>
-
-                    <h1 className={`${bangers.className} relative z-10 text-5xl md:text-7xl text-center uppercase tracking-wider px-8`}>
-                        THE SCROLL ARCHIVE
-                    </h1>
-                    <div className="relative z-10 flex flex-col gap-2 items-center mt-4">
-                        {selectedCategory && (
-                            <span className="inline-block px-4 py-1 bg-yellow-300 border-2 border-black text-sm font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                CATEGORY: {selectedCategory.toUpperCase()}
-                            </span>
-                        )}
-                        {selectedTag && (
-                            <span
-                                className={`inline-block px-4 py-1 border-2 border-black text-sm font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ${selectedTag === 'Thoughts' ? 'bg-yellow-300' :
-                                    selectedTag === 'Books' ? 'bg-blue-300' :
-                                        selectedTag === 'Tech' ? 'bg-green-300' :
-                                            selectedTag === 'Pictures' ? 'bg-pink-300' :
-                                                'bg-gray-200'
-                                    }`}
-                            >
-                                {{
-                                    Thoughts: "💭 RANDOM THOUGHTS",
-                                    Books: "📚 BOOK COLLECTION",
-                                    Tech: "🧪 TECH STUFF",
-                                    Pictures: "📸 PHOTO GALLERY"
-                                }[selectedTag] || `FILTER: ${selectedTag.toUpperCase()}`}
-                            </span>
-                        )}
-
-                    </div>
+            {/* HEADER - MANGA STYLE */}
+            <header className="mb-12 relative text-center">
+                {/* Speed lines radiating from center */}
+                <div className="absolute inset-0 opacity-10 pointer-events-none overflow-hidden">
+                    <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_4px,#000_4px,#000_5px)] transform -skew-y-12"></div>
                 </div>
 
-                {/* FILTER DOCK */}
+                <div className="relative inline-block">
+                    <h1 className="text-6xl md:text-7xl font-black text-gray-900 mb-2 tracking-tight uppercase">
+                        THE SCROLL ARCHIVE
+                    </h1>
+                    {/* Manga-style underline accent */}
+                    <div className="flex gap-1 justify-center mt-2">
+                        <span className="w-12 h-1 bg-black"></span>
+                        <span className="w-8 h-1 bg-black"></span>
+                        <span className="w-4 h-1 bg-black"></span>
+                    </div>
+                </div>
+            </header>
+
+            {/* FILTERS ROW - Applied filters on left, Filter buttons on right */}
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-16 gap-6">
+                {/* LEFT: Applied Filters */}
+                <div className="flex flex-col gap-3">
+                    {selectedCategory && (
+                        <span className="px-4 py-2 bg-black text-white text-sm font-black uppercase tracking-wider border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]">
+                            Category: {selectedCategory}
+                        </span>
+                    )}
+                    {selectedTag && (
+                        <span className="px-4 py-2 bg-white text-black text-sm font-black uppercase tracking-wider border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]">
+                            Filter: {selectedTag}
+                        </span>
+                    )}
+                    {!selectedCategory && !selectedTag && (
+                        <span className="text-sm text-gray-500 font-medium">
+                            No filters applied
+                        </span>
+                    )}
+                </div>
+
+                {/* RIGHT: Filter Dock */}
                 <div className="flex gap-4 p-3 rounded-full bg-white/30 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_0_rgba(31,38,135,0.15)]">
                     {/* Thoughts */}
                     <button
@@ -160,43 +159,41 @@ export default function Blog({ posts = [], selectedCategory }: BlogProps) {
                         <Link
                             href={`/post/${post.slug}`}
                             key={idx}
-                            className="bg-white border-4 border-black p-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 active:translate-y-0 active:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer group flex flex-col"
+                            className="border-4 border-black bg-white p-4 flex flex-col hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-y-1 transition-all duration-200 cursor-pointer group"
                         >
-                            {/* Image */}
-                            <div className="relative h-64 border-2 border-black mb-4 overflow-hidden">
+                            {/* Image Container */}
+                            <div className="border-2 border-black relative mb-4 overflow-hidden h-64 md:h-auto md:aspect-[4/3]">
                                 <Image
                                     src={post.cover || "/latest1.png"}
                                     alt={post.title}
                                     fill
-                                    className="object-cover transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0"
+                                    className="object-cover object-center transition-transform duration-300 grayscale group-hover:grayscale-0"
                                     unoptimized
                                 />
                             </div>
 
-                            {/* Text */}
+                            {/* Content */}
                             <div className="flex-1 flex flex-col">
-                                <div className="flex justify-between items-center mb-2 border-b-2 border-gray-100 pb-2">
-                                    <span className="text-xs font-bold text-gray-500">{new Date(post.date).toLocaleDateString()}</span>
-                                    <span className="text-xs font-bold text-gray-500">{post.readTime || "5 min read"}</span>
+                                <h3 className="font-black text-2xl leading-none mb-2 group-hover:underline truncate md:whitespace-normal">{post.title}</h3>
+
+                                <div className="text-xs font-bold text-gray-500 mb-4 flex justify-between border-b-2 border-gray-100 pb-2">
+                                    <span>{new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                                    <span>{post.readTime || "5 min read"}</span>
                                 </div>
 
-                                <h2 className={`${bangers.className} text-3xl mb-2 leading-none group-hover:underline decoration-2 underline-offset-2`}>
-                                    {post.title}
-                                </h2>
-
-                                <p className="text-gray-600 font-medium line-clamp-3 mb-6 flex-1">
+                                <p className="text-sm text-gray-700 mb-6 line-clamp-3 font-medium">
                                     {post.description}
                                 </p>
 
-                                <button className="self-start bg-black text-white px-6 py-2 font-bold text-sm hover:bg-gray-800 transition-colors w-full md:w-auto text-center">
-                                    READ CHAPTER
+                                <button className="mt-auto bg-black text-white text-xs font-bold py-2 px-6 rounded-full w-fit self-end hover:bg-gray-800 active:bg-gray-600 transition transform group-hover:-translate-y-1 group-active:translate-y-0">
+                                    Read More
                                 </button>
                             </div>
                         </Link>
                     ))
                 ) : (
                     <div className="col-span-3 text-center py-20">
-                        <p className={`${bangers.className} text-3xl text-gray-400 mb-4`}>
+                        <p className="font-black text-3xl text-gray-400 mb-4">
                             {selectedCategory
                                 ? `NO SCROLLS FOUND IN "${selectedCategory.toUpperCase()}"`
                                 : selectedTag
