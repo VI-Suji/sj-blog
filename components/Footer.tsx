@@ -41,7 +41,7 @@ export default function Footer() {
                         </a>
                     </div>
                     <div className="text-center md:text-right">
-                        <p className="text-sm font-bold text-gray-500">
+                        <p className="font-serif text-sm text-gray-500">
                             © 2025 Sujith V I. All rights reserved.
                         </p>
                     </div>

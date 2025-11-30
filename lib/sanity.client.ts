@@ -5,7 +5,7 @@ export const client = createClient({
     projectId,
     dataset,
     apiVersion,
-    useCdn: true,
+    useCdn: false, // Disabled CDN to avoid DNS issues
 })
 
 // Simple image URL builder

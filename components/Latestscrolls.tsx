@@ -20,7 +20,7 @@ export default function LatestScrolls({ posts = [] }: LatestScrollsProps) {
                 </div>
 
                 <div className="relative inline-block">
-                    <h2 className="text-6xl md:text-7xl font-black text-gray-900 mb-2 tracking-tight uppercase">
+                    <h2 className="font-cormorant text-5xl sm:text-6xl md:text-7xl font-bold italic text-gray-900 mb-2 tracking-tight uppercase">
                         LATEST SCROLLS
                     </h2>
                     {/* Manga-style underline accent */}
@@ -35,10 +35,10 @@ export default function LatestScrolls({ posts = [] }: LatestScrollsProps) {
             {/* CARDS */}
             <div className="grid md:grid-cols-3 gap-6 md:gap-8">
                 {displayPosts.length > 0 ? (
-                    displayPosts.map((post, idx) => (
+                    displayPosts.map((post) => (
                         <Link
                             href={`/post/${post.slug}`}
-                            key={idx}
+                            key={post.id || post.slug}
                             className="border-4 border-black bg-white p-4 flex flex-col hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-y-1 transition-all duration-200 cursor-pointer group"
                         >
                             {/* Image Container */}
@@ -54,14 +54,14 @@ export default function LatestScrolls({ posts = [] }: LatestScrollsProps) {
 
                             {/* Content */}
                             <div className="flex-1 flex flex-col">
-                                <h3 className="font-black text-2xl leading-none mb-2 group-hover:underline truncate md:whitespace-normal">{post.title}</h3>
+                                <h3 className="font-cormorant font-bold text-2xl sm:text-3xl md:text-4xl leading-none mb-4 group-hover:underline md:whitespace-normal">{post.title}</h3>
 
                                 <div className="text-xs font-bold text-gray-500 mb-4 flex justify-between border-b-2 border-gray-100 pb-2">
                                     <span>{new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                                     <span>{post.readTime || "5 min read"}</span>
                                 </div>
 
-                                <p className="text-sm text-gray-700 mb-6 line-clamp-3 font-medium">
+                                <p className="font-serif text-sm sm:text-base md:text-lg text-gray-700 mb-6 line-clamp-3 leading-relaxed">
                                     {post.description}
                                 </p>
 

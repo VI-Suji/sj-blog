@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { BlogPost } from "@/lib/types";
@@ -62,7 +63,7 @@ export default function Topics({ posts = [] }: TopicsProps) {
     };
 
     return (
-        <div className="max-w-2xl mx-auto px-6 py-12 min-h-screen">
+        <div className="max-w-4xl mx-auto px-6 py-12 min-h-screen">
 
             {/* HEADER - MANGA STYLE */}
             <header className="mb-20 relative text-center">
@@ -72,7 +73,7 @@ export default function Topics({ posts = [] }: TopicsProps) {
                 </div>
 
                 <div className="relative inline-block">
-                    <h1 className="text-6xl md:text-7xl font-black text-gray-900 mb-2 tracking-tight uppercase">
+                    <h1 className="font-cormorant text-5xl sm:text-6xl md:text-7xl font-bold italic text-gray-900 mb-2 tracking-tight uppercase">
                         TOPICS
                     </h1>
                     {/* Manga-style underline accent */}
@@ -82,7 +83,7 @@ export default function Topics({ posts = [] }: TopicsProps) {
                         <span className="w-4 h-1 bg-black"></span>
                     </div>
                 </div>
-                <p className="text-lg text-gray-600 mt-6 font-medium">
+                <p className="font-serif text-base sm:text-lg text-gray-600 mt-6">
                     Find Your Focus
                 </p>
             </header>
@@ -109,24 +110,63 @@ export default function Topics({ posts = [] }: TopicsProps) {
             {/* SEARCH RESULTS */}
             {searchResults.length > 0 && (
                 <div className="mb-12">
-                    <h2 className="font-black text-2xl mb-4">
+                    <h2 className="font-cormorant text-2xl sm:text-3xl md:text-4xl font-bold mb-6">
                         SEARCH RESULTS ({searchResults.length})
                     </h2>
-                    <div className="space-y-3">
+                    <div className="flex flex-col gap-6">
                         {searchResults.map((post, idx) => (
                             <Link
                                 key={idx}
                                 href={`/post/${post.slug}`}
-                                className="block bg-white border-2 border-black p-4 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 active:translate-y-0 active:shadow-none active:scale-[0.99] transition-all cursor-pointer"
+                                className="group flex flex-col md:flex-row gap-6 items-start p-4 border-2 border-transparent hover:border-black hover:bg-gray-50 transition-all rounded-lg"
                             >
-                                <h3 className="font-bold text-lg mb-1">{post.title}</h3>
-                                <p className="text-sm text-gray-600 mb-2">{post.description}</p>
-                                <div className="flex gap-2">
-                                    {post.tags?.map((tag: string, i: number) => (
-                                        <span key={i} className="text-xs px-2 py-1 bg-gray-100 border border-gray-300 rounded">
-                                            {tag}
+                                {/* 1. Thumbnail Image */}
+                                <div className="relative w-full md:w-48 aspect-[3/2] shrink-0 border-2 border-black overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] group-hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] group-hover:-translate-y-0.5 transition-all">
+                                    <Image
+                                        src={post.cover || "/latest1.png"}
+                                        alt={post.title}
+                                        fill
+                                        className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                                        unoptimized
+                                        loading="lazy"
+                                    />
+                                </div>
+
+                                {/* 2. Content */}
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <span className="font-mono text-xs text-gray-400">
+                                            {new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                         </span>
-                                    ))}
+                                        <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
+                                        <span className="text-[10px] font-black uppercase bg-gray-100 text-gray-600 px-2 py-0.5 rounded">
+                                            {post.category}
+                                        </span>
+                                    </div>
+
+                                    <h3 className="font-cormorant text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors leading-tight">
+                                        {post.title}
+                                    </h3>
+
+                                    <p className="font-serif text-base sm:text-lg text-gray-700 line-clamp-2 leading-relaxed max-w-xl">
+                                        {post.description}
+                                    </p>
+
+                                    {/* Tags */}
+                                    {post.tags && post.tags.length > 0 && (
+                                        <div className="flex gap-2 mt-3">
+                                            {post.tags.map((tag: string, i: number) => (
+                                                <span key={i} className="text-xs px-2 py-1 bg-gray-100 border border-gray-300 rounded">
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* 3. Arrow (Desktop) */}
+                                <div className="hidden md:flex self-center opacity-0 group-hover:opacity-100 transition-opacity -translate-x-4 group-hover:translate-x-0 duration-300">
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                                 </div>
                             </Link>
                         ))}
@@ -136,7 +176,7 @@ export default function Topics({ posts = [] }: TopicsProps) {
 
             {/* EXPLORE CATEGORIES */}
             <div className="text-center mb-8">
-                <h2 className="font-black text-3xl inline-flex items-center gap-4">
+                <h2 className="font-cormorant text-xl sm:text-2xl md:text-3xl font-bold inline-flex items-center gap-4">
                     <span className="h-1 w-8 bg-black rounded-full"></span>
                     EXPLORE CATEGORIES
                     <span className="h-1 w-8 bg-black rounded-full"></span>
@@ -156,8 +196,8 @@ export default function Topics({ posts = [] }: TopicsProps) {
                             <div className="flex items-center gap-4">
                                 <div className="text-2xl w-10 text-center">{cat.icon}</div>
                                 <div className="flex flex-col">
-                                    <span className="font-black text-xl tracking-wide group-hover:text-gray-700 uppercase">{cat.name}</span>
-                                    <span className="text-xs font-bold text-gray-500">{count} Scroll{count !== 1 ? 's' : ''}</span>
+                                    <span className="font-cormorant font-black text-lg sm:text-xl md:text-2xl tracking-wide group-hover:text-gray-700">{cat.name}</span>
+                                    <span className="font-serif text-xs sm:text-sm text-gray-500">{count} Scroll{count !== 1 ? 's' : ''}</span>
                                 </div>
                             </div>
                             <div className="w-8 h-8 border-2 border-black rounded-full flex items-center justify-center group-hover:bg-black group-hover:text-white transition-colors">

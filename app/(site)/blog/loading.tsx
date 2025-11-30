@@ -1,53 +1,55 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Bangers } from "next/font/google";
-
-const bangers = Bangers({ subsets: ["latin"], weight: "400" });
 
 export default function Loading() {
     return (
         <div className="flex flex-col min-h-screen">
             <Navbar />
             <div className="flex-grow">
-                <section className="max-w-6xl mx-auto px-6 py-12">
-                    {/* HEADER & FILTERS CONTAINER */}
-                    <div className="flex flex-col md:flex-row items-center md:items-end justify-between mb-16 gap-8">
+                <section className="max-w-4xl mx-auto px-6 py-20 min-h-screen">
 
-                        {/* HEADER TITLE */}
-                        <div className="relative bg-white p-6 transform -rotate-1">
-                            {/* Double border effect */}
-                            <div className="absolute inset-0 border-4 border-black transform translate-x-1 translate-y-1"></div>
-                            <div className="absolute inset-0 border-4 border-black"></div>
+                    {/* HEADER SKELETON - Matches Blog.tsx */}
+                    <header className="mb-16 relative">
+                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 relative z-10">
+                            <div className="relative inline-block animate-pulse">
+                                <div className="h-16 w-64 bg-gray-200 mb-2"></div>
+                                <div className="flex gap-1 mt-2">
+                                    <span className="w-12 h-1 bg-gray-300"></span>
+                                    <span className="w-8 h-1 bg-gray-300"></span>
+                                    <span className="w-4 h-1 bg-gray-300"></span>
+                                </div>
+                            </div>
 
-                            <h1 className={`${bangers.className} relative z-10 text-5xl md:text-7xl text-center uppercase tracking-wider px-8`}>
-                                THE SCROLL ARCHIVE
-                            </h1>
+                            {/* Filters Skeleton */}
+                            <div className="flex gap-2 flex-wrap self-start md:self-end mb-2">
+                                {[1, 2, 3, 4].map((i) => (
+                                    <div key={i} className="h-8 w-16 bg-gray-200 border-2 border-gray-100"></div>
+                                ))}
+                            </div>
                         </div>
+                    </header>
 
-                        {/* FILTER DOCK SKELETON */}
-                        <div className="flex gap-4 p-3 rounded-full bg-white/30 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_0_rgba(31,38,135,0.15)]">
-                            {[1, 2, 3, 4].map((_, idx) => (
-                                <div key={idx} className="w-12 h-12 border-4 border-black bg-white rounded-full animate-pulse"></div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* GRID SKELETON */}
-                    <div className="grid md:grid-cols-3 gap-8 md:gap-12">
-                        {Array.from({ length: 6 }).map((_, idx) => (
+                    {/* LIST SKELETON - Matches Blog.tsx List Layout */}
+                    <div className="flex flex-col gap-6 mb-20">
+                        {Array.from({ length: 4 }).map((_, idx) => (
                             <div
                                 key={idx}
-                                className="bg-white border-4 border-black p-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] animate-pulse"
+                                className="flex flex-col md:flex-row gap-6 items-start p-4 border-2 border-transparent"
                             >
-                                <div className="relative w-full h-48 bg-gray-200 mb-4"></div>
-                                <div className="h-6 bg-gray-200 mb-3 w-3/4"></div>
-                                <div className="h-4 bg-gray-200 mb-2 w-full"></div>
-                                <div className="h-4 bg-gray-200 mb-4 w-5/6"></div>
-                                <div className="flex gap-2 mb-3">
-                                    <div className="h-6 w-16 bg-gray-200"></div>
-                                    <div className="h-6 w-20 bg-gray-200"></div>
+                                {/* Thumbnail Skeleton */}
+                                <div className="relative w-full md:w-48 aspect-[3/2] shrink-0 bg-gray-200 animate-pulse border-2 border-gray-100"></div>
+
+                                {/* Content Skeleton */}
+                                <div className="flex-1 w-full">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <div className="h-3 w-20 bg-gray-200 rounded"></div>
+                                        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+                                    </div>
+
+                                    <div className="h-8 w-3/4 bg-gray-200 mb-2 rounded animate-pulse"></div>
+                                    <div className="h-4 w-full bg-gray-200 mb-1 rounded"></div>
+                                    <div className="h-4 w-2/3 bg-gray-200 rounded"></div>
                                 </div>
-                                <div className="h-4 bg-gray-200 w-24"></div>
                             </div>
                         ))}
                     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -14,39 +14,47 @@ interface BlogProps {
 export default function Blog({ posts = [], selectedCategory }: BlogProps) {
     const [selectedTag, setSelectedTag] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
-    const postsPerPage = 6; // 2 rows of 3 posts
-    const isLoading = false;
+    const postsPerPage = 4; // Show 4 items per page
 
-    // Filter by category first, then by tag
-    let filteredPosts = posts;
+    // Filter logic
+    const filteredPosts = useMemo(() => {
+        let filtered = posts;
+        if (selectedCategory) {
+            filtered = filtered.filter(post =>
+                post.category?.toLowerCase() === selectedCategory.toLowerCase()
+            );
+        }
+        if (selectedTag) {
+            filtered = filtered.filter(post => {
+                const postTags = post.tags?.map((t: string) => t.toLowerCase()) || [];
+                return postTags.includes(selectedTag.toLowerCase());
+            });
+        }
+        return filtered;
+    }, [posts, selectedCategory, selectedTag]);
 
-    if (selectedCategory) {
-        filteredPosts = filteredPosts.filter(post =>
-            post.category?.toLowerCase() === selectedCategory.toLowerCase()
-        );
-    }
-
-    if (selectedTag) {
-        filteredPosts = filteredPosts.filter(post => {
-            // Case-insensitive tag matching
-            const postTags = post.tags?.map((t: string) => t.toLowerCase()) || [];
-            return postTags.includes(selectedTag.toLowerCase());
+    // Extract unique tags from ALL posts (case-insensitive)
+    const allTags = useMemo(() => {
+        const tags = new Set<string>();
+        posts.forEach(post => {
+            post.tags?.forEach(tag => tags.add(tag.toLowerCase())); // Normalize to lowercase
         });
-    }
+        // Capitalize first letter for display
+        return Array.from(tags).sort().map(tag => tag.charAt(0).toUpperCase() + tag.slice(1));
+    }, [posts]);
 
-    // Calculate pagination
+    // Pagination Logic
     const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
     const startIndex = (currentPage - 1) * postsPerPage;
     const endIndex = startIndex + postsPerPage;
     const currentPosts = filteredPosts.slice(startIndex, endIndex);
 
     const handleTagClick = (tag: string) => {
-        if (selectedTag === tag) {
-            setSelectedTag(null);
-        } else {
-            setSelectedTag(tag);
-        }
-        setCurrentPage(1); // Reset to first page when filter changes
+        // Compare lowercase for logic
+        const tagLower = tag.toLowerCase();
+        const selectedLower = selectedTag?.toLowerCase();
+        setSelectedTag(selectedLower === tagLower ? null : tag);
+        setCurrentPage(1);
     };
 
     const handlePageChange = (page: number) => {
@@ -55,208 +63,160 @@ export default function Blog({ posts = [], selectedCategory }: BlogProps) {
     };
 
     return (
-        <section className="max-w-6xl mx-auto px-6 py-12">
+        <section className="max-w-4xl mx-auto px-6 py-20 min-h-screen">
+
             {/* HEADER - MANGA STYLE */}
-            <header className="mb-12 relative text-center">
+            <header className="mb-16 relative">
                 {/* Speed lines radiating from center */}
                 <div className="absolute inset-0 opacity-10 pointer-events-none overflow-hidden">
                     <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_4px,#000_4px,#000_5px)] transform -skew-y-12"></div>
                 </div>
 
-                <div className="relative inline-block">
-                    <h1 className="text-6xl md:text-7xl font-black text-gray-900 mb-2 tracking-tight uppercase">
-                        THE SCROLL ARCHIVE
-                    </h1>
-                    {/* Manga-style underline accent */}
-                    <div className="flex gap-1 justify-center mt-2">
-                        <span className="w-12 h-1 bg-black"></span>
-                        <span className="w-8 h-1 bg-black"></span>
-                        <span className="w-4 h-1 bg-black"></span>
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 relative z-10">
+                    <div className="relative inline-block">
+                        <h1 className="font-cormorant text-5xl sm:text-6xl md:text-7xl font-bold italic text-gray-900 mb-2 tracking-tight uppercase">
+                            THE ARCHIVE
+                        </h1>
+                        {/* Manga-style underline accent */}
+                        <div className="flex gap-1 mt-2">
+                            <span className="w-12 h-1 bg-black"></span>
+                            <span className="w-8 h-1 bg-black"></span>
+                            <span className="w-4 h-1 bg-black"></span>
+                        </div>
+                    </div>
+
+                    {/* Minimal Filters - Dynamic Tags */}
+                    <div className="flex gap-2 flex-wrap self-start md:self-end mb-2 max-w-md justify-end">
+                        {allTags.map((tag) => (
+                            <button
+                                key={tag}
+                                onClick={() => handleTagClick(tag)}
+                                className={`px-3 py-1 text-xs font-bold uppercase border-2 border-black transition-all ${selectedTag?.toLowerCase() === tag.toLowerCase()
+                                    ? "bg-black text-white"
+                                    : "bg-white text-black hover:bg-gray-100"
+                                    }`}
+                            >
+                                {tag}
+                            </button>
+                        ))}
                     </div>
                 </div>
             </header>
 
-            {/* FILTERS ROW - Applied filters on left, Filter buttons on right */}
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-16 gap-6">
-                {/* LEFT: Applied Filters */}
-                <div className="flex flex-col gap-3">
+            {/* ACTIVE FILTER INDICATOR */}
+            {(selectedCategory || selectedTag) && (
+                <div className="mb-8 flex items-center gap-2 animate-fade-in flex-wrap">
+                    <span className="text-sm font-bold text-gray-500 uppercase">
+                        Viewing:
+                    </span>
                     {selectedCategory && (
-                        <span className="px-4 py-2 bg-black text-white text-sm font-black uppercase tracking-wider border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]">
+                        <span className="px-3 py-1 bg-black text-white text-xs font-black uppercase border-2 border-black">
                             Category: {selectedCategory}
                         </span>
                     )}
                     {selectedTag && (
-                        <span className="px-4 py-2 bg-white text-black text-sm font-black uppercase tracking-wider border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]">
-                            Filter: {selectedTag}
-                        </span>
-                    )}
-                    {!selectedCategory && !selectedTag && (
-                        <span className="text-sm text-gray-500 font-medium">
-                            No filters applied
-                        </span>
-                    )}
-                </div>
-
-                {/* RIGHT: Filter Dock */}
-                <div className="flex gap-4 p-3 rounded-full bg-white/30 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_0_rgba(31,38,135,0.15)]">
-                    {/* Thoughts */}
-                    <button
-                        onClick={() => handleTagClick("Thoughts")}
-                        className={`w-12 h-12 border-4 border-black flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 active:scale-90 transition-all rounded-full group ${selectedTag === "Thoughts" ? "bg-yellow-400" : "bg-white"}`}
-                        title="Thoughts"
-                    >
-                        <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
-                    </button>
-                    {/* Books */}
-                    <button
-                        onClick={() => handleTagClick("Books")}
-                        className={`w-12 h-12 border-4 border-black flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 active:scale-90 transition-all rounded-full group ${selectedTag === "Books" ? "bg-blue-400" : "bg-white"}`}
-                        title="Books"
-                    >
-                        <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                    </button>
-                    {/* Tech */}
-                    <button
-                        onClick={() => handleTagClick("Tech")}
-                        className={`w-12 h-12 border-4 border-black flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 active:scale-90 transition-all rounded-full group ${selectedTag === "Tech" ? "bg-green-400" : "bg-white"}`}
-                        title="Tech"
-                    >
-                        <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-                    </button>
-                    {/* Pictures */}
-                    <button
-                        onClick={() => handleTagClick("Pictures")}
-                        className={`w-12 h-12 border-4 border-black flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 active:scale-90 transition-all rounded-full group ${selectedTag === "Pictures" ? "bg-pink-400" : "bg-white"}`}
-                        title="Pictures"
-                    >
-                        <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                    </button>
-                </div>
-            </div>
-
-            {/* GRID */}
-            <div className="grid md:grid-cols-3 gap-8 md:gap-12">
-                {isLoading ? (
-                    // Skeleton Loader
-                    Array.from({ length: 6 }).map((_, idx) => (
-                        <div
-                            key={idx}
-                            className="bg-white border-4 border-black p-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] animate-pulse"
-                        >
-                            <div className="relative w-full h-48 bg-gray-200 mb-4"></div>
-                            <div className="h-6 bg-gray-200 mb-3 w-3/4"></div>
-                            <div className="h-4 bg-gray-200 mb-2 w-full"></div>
-                            <div className="h-4 bg-gray-200 mb-4 w-5/6"></div>
-                            <div className="flex gap-2 mb-3">
-                                <div className="h-6 w-16 bg-gray-200"></div>
-                                <div className="h-6 w-20 bg-gray-200"></div>
-                            </div>
-                            <div className="h-4 bg-gray-200 w-24"></div>
-                        </div>
-                    ))
-                ) : currentPosts.length > 0 ? (
-                    currentPosts.map((post, idx) => (
-                        <Link
-                            href={`/post/${post.slug}`}
-                            key={idx}
-                            className="border-4 border-black bg-white p-4 flex flex-col hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-y-1 transition-all duration-200 cursor-pointer group"
-                        >
-                            {/* Image Container */}
-                            <div className="border-2 border-black relative mb-4 overflow-hidden h-64 md:h-auto md:aspect-[4/3]">
-                                <Image
-                                    src={post.cover || "/latest1.png"}
-                                    alt={post.title}
-                                    fill
-                                    className="object-cover object-center transition-transform duration-300 grayscale group-hover:grayscale-0"
-                                    unoptimized
-                                />
-                            </div>
-
-                            {/* Content */}
-                            <div className="flex-1 flex flex-col">
-                                <h3 className="font-black text-2xl leading-none mb-2 group-hover:underline truncate md:whitespace-normal">{post.title}</h3>
-
-                                <div className="text-xs font-bold text-gray-500 mb-4 flex justify-between border-b-2 border-gray-100 pb-2">
-                                    <span>{new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                                    <span>{post.readTime || "5 min read"}</span>
-                                </div>
-
-                                <p className="text-sm text-gray-700 mb-6 line-clamp-3 font-medium">
-                                    {post.description}
-                                </p>
-
-                                <button className="mt-auto bg-black text-white text-xs font-bold py-2 px-6 rounded-full w-fit self-end hover:bg-gray-800 active:bg-gray-600 transition transform group-hover:-translate-y-1 group-active:translate-y-0">
-                                    Read More
-                                </button>
-                            </div>
-                        </Link>
-                    ))
-                ) : (
-                    <div className="col-span-3 text-center py-20">
-                        <p className="font-black text-3xl text-gray-400 mb-4">
-                            {selectedCategory
-                                ? `NO SCROLLS FOUND IN "${selectedCategory.toUpperCase()}"`
-                                : selectedTag
-                                    ? `NO SCROLLS FOUND FOR "${selectedTag.toUpperCase()}"`
-                                    : "NO SCROLLS FOUND IN THE ARCHIVE..."}
-                        </p>
-                        {(selectedTag || selectedCategory) && (
+                        <span className="px-3 py-1 bg-white text-black text-xs font-black uppercase border-2 border-black flex items-center gap-2">
+                            Tag: {selectedTag}
                             <button
-                                onClick={() => {
-                                    setSelectedTag(null);
-                                    setCurrentPage(1);
-                                }}
-                                className="mt-4 px-6 py-2 border-2 border-black bg-white font-bold hover:bg-black hover:text-white transition-colors"
+                                onClick={() => setSelectedTag(null)}
+                                className="hover:text-red-500 font-bold"
                             >
-                                CLEAR FILTERS
+                                ×
                             </button>
-                        )}
+                        </span>
+                    )}
+                    {(selectedCategory || selectedTag) && (
+                        <Link href="/blog" className="text-xs font-bold text-gray-400 hover:text-black underline ml-2">
+                            Clear All
+                        </Link>
+                    )}
+                </div>
+            )}
+
+            {/* COMPACT LIST WITH THUMBNAILS */}
+            <div className="flex flex-col gap-6 mb-20">
+                {currentPosts.map((post) => (
+                    <Link
+                        href={`/post/${post.slug}`}
+                        key={post.id || post.slug}
+                        className="group flex flex-col md:flex-row gap-6 items-start p-4 border-2 border-transparent hover:border-black hover:bg-gray-50 transition-all rounded-lg"
+                    >
+                        {/* 1. Thumbnail Image (Visible) */}
+                        <div className="relative w-full md:w-48 aspect-[3/2] shrink-0 border-2 border-black overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] group-hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] group-hover:-translate-y-0.5 transition-all">
+                            <Image
+                                src={post.cover || "/latest1.png"}
+                                alt={post.title}
+                                fill
+                                className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                                unoptimized
+                                loading="lazy"
+                            />
+                        </div>
+
+                        {/* 2. Content */}
+                        <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-3 mb-2">
+                                <span className="font-mono text-xs text-gray-400">
+                                    {new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                </span>
+                                <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
+                                <span className="text-[10px] font-black uppercase bg-gray-100 text-gray-600 px-2 py-0.5 rounded">
+                                    {post.category}
+                                </span>
+                            </div>
+
+                            <h3 className="font-cormorant text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors leading-tight">
+                                {post.title}
+                            </h3>
+
+                            <p className="font-serif text-base sm:text-lg text-gray-700 line-clamp-2 leading-relaxed max-w-xl">
+                                {post.description}
+                            </p>
+                        </div>
+
+                        {/* 3. Arrow (Desktop) */}
+                        <div className="hidden md:flex self-center opacity-0 group-hover:opacity-100 transition-opacity -translate-x-4 group-hover:translate-x-0 duration-300">
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </div>
+                    </Link>
+                ))}
+
+                {filteredPosts.length === 0 && (
+                    <div className="py-20 text-center text-gray-400 font-mono text-sm border-2 border-dashed border-gray-200">
+                        // NO DATA FOUND IN SECTOR
                     </div>
                 )}
             </div>
 
-            {/* PAGINATION */}
+            {/* PAGINATION - SLEEK DOCK STYLE */}
             {totalPages > 1 && (
-                <div className="flex flex-col md:flex-row justify-center items-center gap-4 mt-16">
-                    {/* PREV Button */}
-                    <button
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        disabled={currentPage === 1}
-                        className={`w-full md:w-auto px-6 py-3 border-4 border-black font-bold uppercase tracking-wider shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5 active:translate-y-0 active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all ${currentPage === 1
-                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                            : 'bg-white hover:bg-gray-50'
-                            }`}
-                    >
-                        ← PREV
-                    </button>
+                <div className="flex justify-center mt-12">
+                    <div className="flex items-center gap-6 bg-white border-2 border-black px-6 py-3 rounded-full shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                        {/* Prev Button */}
+                        <button
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className="p-2 hover:bg-gray-100 rounded-full disabled:opacity-30 disabled:hover:bg-transparent transition-colors group"
+                            title="Previous Page"
+                        >
+                            <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
+                        </button>
 
-                    {/* Page Numbers */}
-                    <div className="flex flex-wrap gap-2 justify-center">
-                        {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                            <button
-                                key={page}
-                                onClick={() => handlePageChange(page)}
-                                className={`w-12 h-12 border-4 border-black font-bold text-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5 active:translate-y-0 active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all ${currentPage === page
-                                    ? 'bg-black text-white'
-                                    : 'bg-white hover:bg-gray-50'
-                                    }`}
-                            >
-                                {page}
-                            </button>
-                        ))}
+                        {/* Page Indicator */}
+                        <span className="font-mono text-sm font-bold tracking-widest text-gray-500">
+                            PAGE <span className="text-black">{currentPage}</span> / {totalPages}
+                        </span>
+
+                        {/* Next Button */}
+                        <button
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            className="p-2 hover:bg-gray-100 rounded-full disabled:opacity-30 disabled:hover:bg-transparent transition-colors group"
+                            title="Next Page"
+                        >
+                            <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
                     </div>
-
-                    {/* NEXT Button */}
-                    <button
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                        className={`w-full md:w-auto px-6 py-3 border-4 border-black font-bold uppercase tracking-wider shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5 active:translate-y-0 active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all ${currentPage === totalPages
-                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                            : 'bg-white hover:bg-gray-50'
-                            }`}
-                    >
-                        NEXT →
-                    </button>
                 </div>
             )}
         </section>

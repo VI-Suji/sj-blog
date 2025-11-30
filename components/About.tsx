@@ -1,210 +1,119 @@
-import Image from "next/image";
-
 export default function About() {
     return (
-        <div className="min-h-screen bg-white relative overflow-hidden">
-            {/* Manga halftone pattern background */}
-            <div className="fixed inset-0 opacity-[0.03] pointer-events-none z-0"
-                style={{
-                    backgroundImage: 'radial-gradient(circle, #000 1px, transparent 1px)',
-                    backgroundSize: '20px 20px'
-                }}
-            ></div>
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
 
-            <article className="relative z-10 max-w-4xl mx-auto px-6 py-12 md:py-20">
-                {/* TITLE PAGE - MANGA COVER STYLE */}
-                <header className="mb-20 relative text-center">
-                    {/* Speed lines radiating from center */}
-                    <div className="absolute inset-0 opacity-10 pointer-events-none overflow-hidden">
-                        <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_4px,#000_4px,#000_5px)] transform -skew-y-12"></div>
-                    </div>
+            {/* HEADER - MANGA STYLE (matching Latest Scrolls, Topics, Blog) - CENTERED */}
+            <header className="mb-12 sm:mb-16 relative">
+                {/* Speed lines radiating from center */}
+                <div className="absolute inset-0 opacity-10 pointer-events-none overflow-hidden">
+                    <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_4px,#000_4px,#000_5px)] transform -skew-y-12"></div>
+                </div>
 
-                    <div className="relative inline-block">
-                        <h1 className="text-6xl md:text-7xl font-black text-gray-900 mb-2 tracking-tight">
+                <div className="relative flex justify-center">
+                    <div className="inline-block text-center">
+                        <h1 className="font-cormorant text-5xl sm:text-6xl md:text-7xl font-bold italic text-gray-900 mb-2 tracking-tight uppercase">
                             ABOUT ME
                         </h1>
                         {/* Manga-style underline accent */}
-                        <div className="flex gap-1 justify-center mt-2">
+                        <div className="flex gap-1 mt-2 justify-center">
                             <span className="w-12 h-1 bg-black"></span>
                             <span className="w-8 h-1 bg-black"></span>
                             <span className="w-4 h-1 bg-black"></span>
                         </div>
                     </div>
-                    <p className="text-lg text-gray-600 mt-6 font-medium">
-                        A Developer's Chronicle
+                </div>
+            </header>
+
+            {/* CONTENT */}
+            <div className="grid md:grid-cols-2 gap-6 sm:gap-8 mb-12 sm:mb-16">
+
+                {/* Introduction Card */}
+                <div className="border-4 border-black bg-white p-6 sm:p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all duration-200">
+                    <h2 className="font-cormorant text-3xl sm:text-4xl font-bold text-gray-900 mb-4 uppercase tracking-tight">
+                        The Developer's Log
+                    </h2>
+                    <p className="font-serif text-base sm:text-lg text-gray-700 leading-relaxed mb-4">
+                        Welcome to my digital space. I'm <span className="font-bold text-black">Sujith V I</span>, a developer passionate about building digital worlds, one line of code at a time.
                     </p>
-                </header>
-
-                {/* CHAPTER 1: INTRODUCTION */}
-                <section className="mb-16 border-2 border-black p-8 bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] relative">
-                    {/* Chapter number in corner */}
-                    <div className="absolute -top-4 -left-4 w-12 h-12 bg-black text-white flex items-center justify-center font-black text-xl border-2 border-white shadow-md">
-                        01
-                    </div>
-
-                    <h2 className="text-3xl font-black text-gray-900 mb-6 uppercase tracking-wide">
-                        Chapter 1: Origin
-                    </h2>
-                    <div className="prose prose-lg max-w-none">
-                        <p className="text-lg text-gray-700 leading-relaxed mb-4">
-                            Extrovert coder who talks as much as I type, loves tidying up chaos, and can turn wild ideas into neat, working code—sometimes obsessively, always creatively.
-                        </p>
-                        <p className="text-lg text-gray-700 leading-relaxed">
-                            "Life is like music—if you want to hear it, you first need to tune it."
-                        </p>
-                    </div>
-                </section>
-
-                {/* CHAPTER 2: INTERESTS */}
-                <section className="mb-16 border-2 border-black p-8 bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] relative">
-                    <div className="absolute -top-4 -left-4 w-12 h-12 bg-black text-white flex items-center justify-center font-black text-xl border-2 border-white shadow-md">
-                        02
-                    </div>
-
-                    <h2 className="text-3xl font-black text-gray-900 mb-6 uppercase tracking-wide">
-                        Chapter 2: Icebreaker Topics
-                    </h2>
-                    <div className="flex flex-wrap gap-3">
-                        {[
-                            "Songs that hit differently",
-                            "Movies that stick with you",
-                            <span key="wild">
-                                Gossip (the <span className="line-through">fun</span> kind)
-                            </span>,
-                            "Wild ideas… that won't work.",
-                            "Procrastination? I do it like a pro."
-                        ].map((topic, i) => (
-                            <span
-                                key={i}
-                                className="px-4 py-2 bg-white text-gray-800 text-sm font-bold border-2 border-black hover:bg-black hover:text-white transition-all cursor-default shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
-                            >
-                                {topic}
-                            </span>
-                        ))}
-                    </div>
-                </section>
-
-                {/* CHAPTER 3: SKILLS */}
-                <section className="mb-16 border-2 border-black p-8 bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] relative">
-                    <div className="absolute -top-4 -left-4 w-12 h-12 bg-black text-white flex items-center justify-center font-black text-xl border-2 border-white shadow-md">
-                        03
-                    </div>
-
-                    <h2 className="text-3xl font-black text-gray-900 mb-6 uppercase tracking-wide">
-                        Chapter 3: Skill Arsenal
-                    </h2>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        {["Next.js", "TypeScript", "Tailwind CSS", "Rust", "PostgreSQL", "Docker", "Kubernetes", "Git"].map((skill, i) => (
-                            <div
-                                key={i}
-                                className="p-4 bg-white border-2 border-black text-center hover:bg-black hover:text-white transition-all group relative"
-                            >
-                                {/* Panel corner decoration */}
-                                <span className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-black group-hover:border-white"></span>
-                                <span className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-black group-hover:border-white"></span>
-
-                                <div className="font-black text-sm uppercase tracking-tight">
-                                    {skill}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </section>
-
-                {/* CHAPTER 4: ACHIEVEMENTS */}
-                {/* <section className="mb-16 border-2 border-black p-8 bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] relative">
-                    <div className="absolute -top-4 -left-4 w-12 h-12 bg-black text-white flex items-center justify-center font-black text-xl border-2 border-white shadow-md">
-                        04
-                    </div>
-
-                    <h2 className="text-3xl font-black text-gray-900 mb-6 uppercase tracking-wide">
-                        Chapter 4: Quest Log
-                    </h2>
-                    <ul className="space-y-4">
-                        {[
-                            "Built and launched 4+ products with Cursor in under a month",
-                            "Ranked 71st in the IBM Quantum Challenge 2020",
-                            "Youngest person in the first batch of Qiskit Advocates Program",
-                            "Top 3 best outgoing students, CSE Dept, MACE",
-                            "Most Creative Hack Winner at Rookie Hacks (MLH)",
-                            "OSS contributions to Qiskit, CoronaSafe, and Kerala Rescue",
-                            "Localization contributions to Mozilla and KDE"
-                        ].map((item, i) => (
-                            <li key={i} className="flex items-start gap-4 text-gray-800 group">
-                                <span className="mt-1 flex-shrink-0 w-6 h-6 bg-black text-white flex items-center justify-center text-xs font-black group-hover:bg-white group-hover:text-black group-hover:border-2 group-hover:border-black transition-all">
-                                    ▸
-                                </span>
-                                <span className="leading-relaxed font-medium">{item}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </section> */}
-
-                {/* CHAPTER 4: WORK HISTORY */}
-                <section className="mb-16 border-2 border-black p-8 bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] relative">
-                    <div className="absolute -top-4 -left-4 w-12 h-12 bg-black text-white flex items-center justify-center font-black text-xl border-2 border-white shadow-md">
-                        04
-                    </div>
-
-                    <h2 className="text-3xl font-black text-gray-900 mb-8 uppercase tracking-wide">
-                        Chapter 4: Previous Arcs
-                    </h2>
-                    <div className="space-y-6">
-                        {[
-                            {
-                                "role": "QA/DevOps Engineer",
-                                "company": "IBM ISL 2024 - Present",
-                                "description": "Making systems behave and automating everything in sight."
-                            },
-                            {
-                                "role": "QA Automation Engineer",
-                                "company": "IBM ISL 2022 - 2024",
-                                "description": "Breaking things on purpose and using automation to fix the mess."
-                            },
-                            {
-                                "role": "Software Developer Intern",
-                                "company": "IBM ISL - 2022",
-                                "description": "Learning by breaking code and pretending it was the plan."
-                            }
-                        ].map((job, i) => (
-                            <div key={i} className="border-l-4 border-black pl-6 hover:bg-gray-50 transition-colors p-4 -ml-4">
-                                <h3 className="text-lg font-black text-gray-900 uppercase tracking-tight">
-                                    {job.role}
-                                </h3>
-                                <p className="text-sm font-bold text-gray-600 mb-2">
-                                    @ {job.company}
-                                </p>
-                                <p className="text-gray-700 leading-relaxed">
-                                    {job.description}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
-                </section>
-
-                {/* FINAL CHAPTER: CONTACT */}
-                <section className="border-2 border-black p-8 bg-black text-white shadow-[8px_8px_0px_0px_rgba(0,0,0,0.3)] relative">
-                    <div className="absolute -top-4 -left-4 w-12 h-12 bg-white text-black flex items-center justify-center font-black text-xl border-2 border-black shadow-md">
-                        ∞
-                    </div>
-
-                    {/* Manga panel effect */}
-                    <div className="absolute top-0 right-0 w-0 h-0 border-l-[40px] border-l-transparent border-t-[40px] border-t-white opacity-20"></div>
-
-                    <h2 className="text-3xl font-black mb-4 uppercase tracking-wide">
-                        To Be Continued...
-                    </h2>
-                    <p className="text-lg mb-6 font-medium">
-                        New chapter time! Let’s collaborate before I overthink it.
+                    <p className="font-serif text-base sm:text-lg text-gray-700 leading-relaxed">
+                        This blog is where I share my thoughts, experiences, and learnings from the ever-evolving world of technology.
                     </p>
-                    <a
-                        href="mailto:hello@sujith.dev"
-                        className="inline-block px-8 py-3 bg-white text-black font-black uppercase tracking-wide border-2 border-white hover:bg-black hover:text-white hover:border-white transition-all shadow-[4px_4px_0px_0px_rgba(255,255,255,0.3)]"
-                    >
-                        Send Signal →
-                    </a>
-                </section>
-            </article>
-        </div>
+                </div>
+
+                {/* Philosophy Card */}
+                <div className="border-4 border-black bg-black text-white p-6 sm:p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all duration-200">
+                    <h2 className="font-cormorant text-3xl sm:text-4xl font-bold mb-4 uppercase tracking-tight">
+                        My Approach
+                    </h2>
+                    <p className="font-serif text-base sm:text-lg text-gray-300 leading-relaxed">
+                        "Building digital worlds, one line at a time" isn't just a tagline—it's a philosophy.
+                        Every project is an opportunity to learn, every bug is a lesson, and every line of code
+                        is a step toward creating something meaningful.
+                    </p>
+                </div>
+            </div>
+
+            {/* What You'll Find Section */}
+            <div className="border-4 border-black bg-white p-6 sm:p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] mb-12 sm:mb-16">
+                <h2 className="font-cormorant text-3xl sm:text-4xl font-bold text-gray-900 mb-6 sm:mb-8 uppercase tracking-tight">
+                    What You'll Find Here
+                </h2>
+                <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+
+                    <div className="flex gap-3 sm:gap-4 p-4 border-2 border-black hover:bg-gray-50 transition-colors">
+                        <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 border-2 border-black flex items-center justify-center">
+                            <span className="text-xl sm:text-2xl">💻</span>
+                        </div>
+                        <div>
+                            <h3 className="font-cormorant font-bold text-gray-900 mb-1 text-lg sm:text-xl uppercase">Technical Insights</h3>
+                            <p className="font-serif text-sm sm:text-base text-gray-600">Deep dives into code, frameworks, and development practices</p>
+                        </div>
+                    </div>
+
+                    <div className="flex gap-3 sm:gap-4 p-4 border-2 border-black hover:bg-gray-50 transition-colors">
+                        <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 border-2 border-black flex items-center justify-center">
+                            <span className="text-xl sm:text-2xl">💭</span>
+                        </div>
+                        <div>
+                            <h3 className="font-cormorant font-bold text-gray-900 mb-1 text-lg sm:text-xl uppercase">Thoughts & Ideas</h3>
+                            <p className="font-serif text-sm sm:text-base text-gray-600">Reflections on technology, creativity, and problem-solving</p>
+                        </div>
+                    </div>
+
+                    <div className="flex gap-3 sm:gap-4 p-4 border-2 border-black hover:bg-gray-50 transition-colors">
+                        <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-green-100 border-2 border-black flex items-center justify-center">
+                            <span className="text-xl sm:text-2xl">📚</span>
+                        </div>
+                        <div>
+                            <h3 className="font-cormorant font-bold text-gray-900 mb-1 text-lg sm:text-xl uppercase">Learning Journey</h3>
+                            <p className="font-serif text-sm sm:text-base text-gray-600">Lessons learned, mistakes made, and growth achieved</p>
+                        </div>
+                    </div>
+
+                    <div className="flex gap-3 sm:gap-4 p-4 border-2 border-black hover:bg-gray-50 transition-colors">
+                        <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-orange-100 border-2 border-black flex items-center justify-center">
+                            <span className="text-xl sm:text-2xl">🎨</span>
+                        </div>
+                        <div>
+                            <h3 className="font-cormorant font-bold text-gray-900 mb-1 text-lg sm:text-xl uppercase">Creative Projects</h3>
+                            <p className="font-serif text-sm sm:text-base text-gray-600">Photography, design, and other creative endeavors</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* CTA Section */}
+            <div className="text-center">
+                <p className="text-sm sm:text-base text-gray-600 mb-6 font-medium">
+                    Thanks for stopping by. Feel free to explore the blog and reach out if you'd like to connect.
+                </p>
+                <a
+                    href="/blog"
+                    className="inline-block px-6 sm:px-8 py-3 sm:py-4 bg-black text-white font-black uppercase tracking-wider border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 active:translate-y-0 active:shadow-none transition-all text-sm sm:text-base"
+                >
+                    Read The Blog
+                </a>
+            </div>
+        </section>
     );
 }

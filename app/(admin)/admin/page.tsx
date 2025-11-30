@@ -3,11 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from 'next-sanity'
-import dynamic from 'next/dynamic'
 import { apiVersion, dataset, projectId } from '@/sanity/env'
-import "easymde/dist/easymde.min.css"
-
-const SimpleMDE = dynamic(() => import('react-simplemde-editor'), { ssr: false })
+import Link from 'next/link'
 
 const client = createClient({
     projectId,
@@ -22,7 +19,6 @@ interface Post {
     title: string
     slug: string
     description: string
-    markdown: string
     category: string
     tags: string[]
     published: boolean
@@ -34,18 +30,6 @@ export default function AdminDashboard() {
     const router = useRouter()
     const [posts, setPosts] = useState<Post[]>([])
     const [loading, setLoading] = useState(true)
-    const [editingId, setEditingId] = useState<string | null>(null)
-    const [isCreating, setIsCreating] = useState(false)
-    const [saving, setSaving] = useState(false)
-    const [formData, setFormData] = useState({
-        title: '',
-        slug: '',
-        description: '',
-        markdown: '',
-        category: 'Technology',
-        tags: '',
-        published: false,
-    })
 
     useEffect(() => {
         fetchPosts()
@@ -58,7 +42,6 @@ export default function AdminDashboard() {
                 title,
                 "slug": slug.current,
                 description,
-                markdown,
                 category,
                 tags,
                 published,
@@ -73,79 +56,6 @@ export default function AdminDashboard() {
         }
     }
 
-    const handleEdit = (post: Post) => {
-        setEditingId(post._id)
-        setIsCreating(false)
-        setFormData({
-            title: post.title || '',
-            slug: post.slug || '',
-            description: post.description || '',
-            markdown: post.markdown || '',
-            category: post.category || 'Technology',
-            tags: post.tags?.join(', ') || '',
-            published: post.published || false,
-        })
-    }
-
-    const handleCreate = () => {
-        setIsCreating(true)
-        setEditingId(null)
-        setFormData({
-            title: '',
-            slug: '',
-            description: '',
-            markdown: '',
-            category: 'Technology',
-            tags: '',
-            published: false,
-        })
-    }
-
-    const handleCancel = () => {
-        setEditingId(null)
-        setIsCreating(false)
-        setFormData({
-            title: '',
-            slug: '',
-            description: '',
-            markdown: '',
-            category: 'Technology',
-            tags: '',
-            published: false,
-        })
-    }
-
-    const handleSave = async () => {
-        setSaving(true)
-        try {
-            const doc = {
-                _type: 'post',
-                title: formData.title,
-                slug: { _type: 'slug', current: formData.slug || formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') },
-                description: formData.description,
-                markdown: formData.markdown,
-                category: formData.category,
-                tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
-                published: formData.published,
-                publishedAt: formData.published ? new Date().toISOString() : null,
-            }
-
-            if (editingId) {
-                await client.patch(editingId).set(doc).commit()
-            } else {
-                await client.create(doc)
-            }
-
-            await fetchPosts()
-            handleCancel()
-        } catch (error) {
-            console.error('Error saving:', error)
-            alert('Error saving post')
-        } finally {
-            setSaving(false)
-        }
-    }
-
     const handleDelete = async (id: string, title: string) => {
         if (!confirm(`Are you sure you want to delete "${title}"?`)) {
             return
@@ -154,9 +64,6 @@ export default function AdminDashboard() {
         try {
             await client.delete(id)
             await fetchPosts()
-            if (editingId === id) {
-                handleCancel()
-            }
         } catch (error) {
             console.error('Error deleting:', error)
             alert('Error deleting post')
@@ -175,223 +82,124 @@ export default function AdminDashboard() {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
                 <div className="flex flex-col items-center gap-4">
-                    <div className="w-12 h-12 border-3 border-slate-200 border-t-slate-600 rounded-full animate-spin"></div>
-                    <p className="text-slate-600 font-medium">Loading...</p>
+                    <div className="w-12 h-12 border-3 border-gray-900 border-t-transparent rounded-full animate-spin"></div>
+                    <p className="text-gray-600 font-medium">Loading...</p>
                 </div>
             </div>
         )
     }
 
     return (
-        <div className="min-h-screen p-6 md:p-10 max-w-7xl mx-auto">
-            {/* Header */}
-            <div className="mb-8">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+        <div className="min-h-screen bg-gray-50">
+            {/* Subtle background */}
+            <div className="fixed inset-0 opacity-[0.015] pointer-events-none z-0"
+                style={{
+                    backgroundImage: 'radial-gradient(circle, #000 0.5px, transparent 0.5px)',
+                    backgroundSize: '20px 20px'
+                }}
+            ></div>
+
+            <div className="max-w-7xl mx-auto p-4 sm:p-6 md:p-10 relative z-10">
+
+                {/* HEADER */}
+                <div className="mb-8 sm:mb-12 flex flex-col sm:flex-row sm:items-end justify-between gap-4 sm:gap-6 pb-6 sm:pb-8 border-b border-gray-200">
                     <div>
-                        <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-1">
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-2">
                             Content Manager
                         </h1>
-                        <p className="text-slate-500">Manage your blog posts</p>
+                        <p className="text-sm sm:text-base text-gray-500 font-medium">
+                            Manage your blog posts
+                        </p>
                     </div>
-                    <button
-                        onClick={handleCreate}
-                        className="px-6 py-3 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800 transition-colors duration-200 shadow-sm"
+
+                    <Link
+                        href="/admin/post/new"
+                        className="group relative px-5 sm:px-6 py-2.5 sm:py-3 bg-gray-900 text-white font-semibold rounded-xl hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl text-sm sm:text-base w-full sm:w-auto text-center"
                     >
-                        + New Post
-                    </button>
-                </div>
-            </div>
-
-            {/* Editor Form */}
-            {(isCreating || editingId) && (
-                <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8 mb-8">
-                    <h2 className="text-2xl font-bold text-slate-900 mb-6">
-                        {isCreating ? 'Create New Post' : 'Edit Post'}
-                    </h2>
-
-                    <div className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-2">Title *</label>
-                                <input
-                                    type="text"
-                                    value={formData.title}
-                                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                    className="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent transition-shadow"
-                                    placeholder="Enter post title"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-2">Slug</label>
-                                <input
-                                    type="text"
-                                    value={formData.slug}
-                                    onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                                    className="w-full border border-slate-300 rounded-lg px-4 py-2.5 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent transition-shadow"
-                                    placeholder="auto-generated"
-                                />
-                            </div>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">Description *</label>
-                            <textarea
-                                value={formData.description}
-                                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                className="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent transition-shadow resize-none"
-                                rows={3}
-                                placeholder="Brief description of the post"
-                            />
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-2">Category</label>
-                                <select
-                                    value={formData.category}
-                                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                                    className="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent transition-shadow bg-white"
-                                >
-                                    <option value="Technology">Technology</option>
-                                    <option value="Design">Design</option>
-                                    <option value="Business">Business</option>
-                                    <option value="Lifestyle">Lifestyle</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-2">Tags</label>
-                                <input
-                                    type="text"
-                                    value={formData.tags}
-                                    onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                                    className="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent transition-shadow"
-                                    placeholder="tag1, tag2, tag3"
-                                />
-                            </div>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">Content (Markdown) *</label>
-                            <div className="border border-slate-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-slate-400 transition-shadow">
-                                <SimpleMDE
-                                    value={formData.markdown}
-                                    onChange={(value) => setFormData({ ...formData, markdown: value })}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-lg">
-                            <input
-                                type="checkbox"
-                                id="published"
-                                checked={formData.published}
-                                onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
-                                className="w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-slate-400 cursor-pointer"
-                            />
-                            <label htmlFor="published" className="text-sm font-medium text-slate-700 cursor-pointer">
-                                Publish immediately
-                            </label>
-                        </div>
-
-                        <div className="flex gap-3 pt-4 border-t border-slate-200">
-                            <button
-                                onClick={handleSave}
-                                disabled={saving || !formData.title || !formData.description || !formData.markdown}
-                                className="px-6 py-2.5 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
-                            >
-                                {saving ? 'Saving...' : 'Save Post'}
-                            </button>
-                            <button
-                                onClick={handleCancel}
-                                className="px-6 py-2.5 bg-white text-slate-700 border border-slate-300 rounded-lg font-medium hover:bg-slate-50 transition-colors"
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Posts List */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                <div className="px-6 py-5 border-b border-slate-200">
-                    <div className="flex items-center justify-between">
-                        <h2 className="text-xl font-bold text-slate-900">All Posts</h2>
-                        <span className="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-sm font-medium">
-                            {posts.length}
+                        <span className="relative z-10 flex items-center justify-center gap-2">
+                            <span className="text-xl leading-none">+</span> New Post
                         </span>
-                    </div>
+                    </Link>
                 </div>
 
-                {posts.length === 0 ? (
-                    <div className="p-12 text-center">
-                        <p className="text-slate-500">No posts yet. Create your first post to get started!</p>
-                    </div>
-                ) : (
-                    <div className="divide-y divide-slate-100">
-                        {posts.map((post) => (
+                {/* POSTS LIST */}
+                <div className="grid gap-3 sm:gap-4">
+                    {posts.length === 0 ? (
+                        <div className="p-12 sm:p-16 text-center rounded-2xl border-2 border-dashed border-gray-200 bg-white">
+                            <p className="text-lg sm:text-xl font-semibold text-gray-400">No posts found</p>
+                            <p className="text-sm sm:text-base text-gray-400 mt-2">Create your first post to get started</p>
+                        </div>
+                    ) : (
+                        posts.map((post) => (
                             <div
                                 key={post._id}
-                                onClick={() => handleEdit(post)}
-                                className="p-6 hover:bg-slate-50 transition-colors cursor-pointer group"
+                                onClick={() => router.push(`/admin/post/${post._id}`)}
+                                className="group bg-white rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md border border-gray-100 transition-all duration-200 cursor-pointer"
                             >
-                                <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-                                    <div className="flex-1 space-y-2">
-                                        <div className="flex items-center gap-3 flex-wrap">
-                                            <h3 className="text-lg font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">
-                                                {post.title}
-                                            </h3>
-                                            <span className={`px-2.5 py-1 rounded-md text-xs font-medium ${post.published
-                                                ? 'bg-green-100 text-green-700'
-                                                : 'bg-slate-100 text-slate-600'
+                                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 sm:gap-6">
+
+                                    {/* Content Info */}
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3">
+                                            <span className={`px-2.5 sm:px-3 py-1 text-xs font-semibold rounded-full ${post.published
+                                                    ? 'bg-green-100 text-green-700'
+                                                    : 'bg-gray-100 text-gray-500'
                                                 }`}>
                                                 {post.published ? 'Published' : 'Draft'}
                                             </span>
-                                        </div>
-                                        <p className="text-slate-600 text-sm leading-relaxed">{post.description}</p>
-                                        <div className="flex flex-wrap gap-2 text-sm">
-                                            <span className="px-2.5 py-1 bg-slate-100 text-slate-700 rounded-md font-medium">
+                                            <span className="text-xs text-gray-400">
+                                                {new Date(post._updatedAt).toLocaleDateString()}
+                                            </span>
+                                            <span className="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded">
                                                 {post.category}
                                             </span>
-                                            {post.tags?.map((tag, i) => (
-                                                <span key={i} className="px-2.5 py-1 bg-blue-50 text-blue-700 rounded-md font-medium">
-                                                    #{tag}
-                                                </span>
-                                            ))}
                                         </div>
+
+                                        <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors break-words">
+                                            {post.title}
+                                        </h3>
+                                        <p className="text-gray-600 text-sm line-clamp-2 sm:line-clamp-1 break-words">
+                                            {post.description}
+                                        </p>
                                     </div>
 
-                                    <div className="flex flex-wrap gap-2" onClick={(e) => e.stopPropagation()}>
+                                    {/* Actions - Right aligned on desktop */}
+                                    <div className="flex flex-col sm:flex-row lg:flex-row items-stretch sm:items-center lg:items-center gap-2 pt-3 sm:pt-0 lg:pt-0 border-t sm:border-t-0 lg:border-t-0 border-gray-100 lg:ml-auto">
                                         <button
-                                            onClick={() => togglePublish(post)}
-                                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${post.published
-                                                ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
-                                                : 'bg-green-100 text-green-700 hover:bg-green-200'
-                                                }`}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                togglePublish(post);
+                                            }}
+                                            className="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors text-center"
                                         >
                                             {post.published ? 'Unpublish' : 'Publish'}
                                         </button>
-                                        <button
-                                            onClick={() => handleEdit(post)}
-                                            className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-200 transition-colors"
+
+                                        <Link
+                                            href={`/admin/post/${post._id}`}
+                                            onClick={(e) => e.stopPropagation()}
+                                            className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors shadow-sm text-center"
                                         >
                                             Edit
-                                        </button>
+                                        </Link>
+
                                         <button
-                                            onClick={() => handleDelete(post._id, post.title)}
-                                            className="px-4 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-medium hover:bg-red-200 transition-colors"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleDelete(post._id, post.title);
+                                            }}
+                                            className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors shadow-sm text-center"
                                         >
                                             Delete
                                         </button>
                                     </div>
                                 </div>
                             </div>
-                        ))}
-                    </div>
-                )}
+                        ))
+                    )}
+                </div>
             </div>
         </div>
     )
