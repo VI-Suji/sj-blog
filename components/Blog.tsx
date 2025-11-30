@@ -74,7 +74,7 @@ export default function Blog({ posts = [], selectedCategory }: BlogProps) {
 
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 relative z-10">
                     <div className="relative inline-block">
-                        <h1 className="font-cormorant text-5xl sm:text-6xl md:text-7xl font-bold italic text-gray-900 mb-2 tracking-tight uppercase">
+                        <h1 className="font-cormorant text-5xl sm:text-6xl md:text-7xl font-extrabold italic text-black mb-2 tracking-tight uppercase">
                             THE ARCHIVE
                         </h1>
                         {/* Manga-style underline accent */}
@@ -126,7 +126,11 @@ export default function Blog({ posts = [], selectedCategory }: BlogProps) {
                         </span>
                     )}
                     {(selectedCategory || selectedTag) && (
-                        <Link href="/blog" className="text-xs font-bold text-gray-400 hover:text-black underline ml-2">
+                        <Link
+                            href="/blog"
+                            onClick={() => setSelectedTag(null)}
+                            className="text-xs font-bold text-gray-400 hover:text-black underline ml-2"
+                        >
                             Clear All
                         </Link>
                     )}
@@ -134,7 +138,7 @@ export default function Blog({ posts = [], selectedCategory }: BlogProps) {
             )}
 
             {/* COMPACT LIST WITH THUMBNAILS */}
-            <div className="flex flex-col gap-6 mb-20">
+            <div className="flex flex-col gap-8 mb-20">
                 {currentPosts.map((post) => (
                     <Link
                         href={`/post/${post.slug}`}
@@ -142,7 +146,7 @@ export default function Blog({ posts = [], selectedCategory }: BlogProps) {
                         className="group flex flex-col md:flex-row gap-6 items-start p-4 border-2 border-transparent hover:border-black hover:bg-gray-50 transition-all rounded-lg"
                     >
                         {/* 1. Thumbnail Image (Visible) */}
-                        <div className="relative w-full md:w-48 aspect-[3/2] shrink-0 border-2 border-black overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] group-hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] group-hover:-translate-y-0.5 transition-all">
+                        <div className="relative w-full md:w-48 aspect-[16/9] md:aspect-[3/2] shrink-0 border-2 border-black overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] group-hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] group-hover:-translate-y-0.5 transition-all">
                             <Image
                                 src={post.cover || "/latest1.png"}
                                 alt={post.title}
@@ -165,11 +169,11 @@ export default function Blog({ posts = [], selectedCategory }: BlogProps) {
                                 </span>
                             </div>
 
-                            <h3 className="font-cormorant text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors leading-tight">
+                            <h3 className="font-cormorant text-2xl sm:text-3xl md:text-4xl font-extrabold text-black mb-2 group-hover:text-blue-600 transition-colors leading-tight">
                                 {post.title}
                             </h3>
 
-                            <p className="font-serif text-base sm:text-lg text-gray-700 line-clamp-2 leading-relaxed max-w-xl">
+                            <p className="font-serif text-base sm:text-lg text-black line-clamp-2 leading-relaxed max-w-xl">
                                 {post.description}
                             </p>
                         </div>

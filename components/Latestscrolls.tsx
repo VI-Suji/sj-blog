@@ -20,7 +20,7 @@ export default function LatestScrolls({ posts = [] }: LatestScrollsProps) {
                 </div>
 
                 <div className="relative inline-block">
-                    <h2 className="font-cormorant text-5xl sm:text-6xl md:text-7xl font-bold italic text-gray-900 mb-2 tracking-tight uppercase">
+                    <h2 className="font-cormorant text-5xl sm:text-6xl md:text-7xl font-extrabold italic text-black mb-2 tracking-tight uppercase">
                         LATEST SCROLLS
                     </h2>
                     {/* Manga-style underline accent */}
@@ -33,7 +33,7 @@ export default function LatestScrolls({ posts = [] }: LatestScrollsProps) {
             </header>
 
             {/* CARDS */}
-            <div className="grid md:grid-cols-3 gap-6 md:gap-8">
+            <div className="grid md:grid-cols-3 gap-8 md:gap-8">
                 {displayPosts.length > 0 ? (
                     displayPosts.map((post) => (
                         <Link
@@ -42,7 +42,7 @@ export default function LatestScrolls({ posts = [] }: LatestScrollsProps) {
                             className="border-4 border-black bg-white p-4 flex flex-col hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-y-1 transition-all duration-200 cursor-pointer group"
                         >
                             {/* Image Container */}
-                            <div className="border-2 border-black relative mb-4 overflow-hidden h-64 md:h-auto md:aspect-[4/3]">
+                            <div className="border-2 border-black relative mb-4 overflow-hidden aspect-[16/9] md:aspect-[4/3]">
                                 <Image
                                     src={post.cover || "/latest1.png"}
                                     alt={post.title}
@@ -54,18 +54,18 @@ export default function LatestScrolls({ posts = [] }: LatestScrollsProps) {
 
                             {/* Content */}
                             <div className="flex-1 flex flex-col">
-                                <h3 className="font-cormorant font-bold text-2xl sm:text-3xl md:text-4xl leading-none mb-4 group-hover:underline md:whitespace-normal">{post.title}</h3>
+                                <h3 className="font-cormorant font-extrabold text-black text-2xl sm:text-3xl md:text-4xl leading-none mb-4 group-hover:underline md:whitespace-normal">{post.title}</h3>
 
                                 <div className="text-xs font-bold text-gray-500 mb-4 flex justify-between border-b-2 border-gray-100 pb-2">
                                     <span>{new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                                     <span>{post.readTime || "5 min read"}</span>
                                 </div>
 
-                                <p className="font-serif text-sm sm:text-base md:text-lg text-gray-700 mb-6 line-clamp-3 leading-relaxed">
+                                <p className="font-serif text-sm sm:text-base md:text-lg text-black mb-6 line-clamp-3 leading-relaxed">
                                     {post.description}
                                 </p>
 
-                                <button className="mt-auto bg-black text-white text-xs font-bold py-2 px-6 rounded-full w-fit self-end hover:bg-gray-800 active:bg-gray-600 transition transform group-hover:-translate-y-1 group-active:translate-y-0">
+                                <button className="mt-auto bg-black text-white text-sm font-bold py-3 px-8 md:py-2 md:px-6 rounded-full w-full md:w-fit self-end hover:bg-gray-800 active:bg-gray-600 transition transform group-hover:-translate-y-1 group-active:translate-y-0">
                                     Read More
                                 </button>
                             </div>

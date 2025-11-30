@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import AuthProvider from "@/components/AuthProvider";
-import { Lora, Cormorant_Garamond } from "next/font/google";
+import { Spectral, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 
-// Serif font for body text - excellent for reading
-const lora = Lora({
-    weight: ['400', '500', '600', '700'],
+// Serif font for body text - designed for screen reading
+const spectral = Spectral({
+    weight: ['400', '500', '600', '700', '800'],
     subsets: ['latin'],
-    variable: '--font-lora',
+    variable: '--font-spectral',
     display: 'swap',
 });
 
@@ -30,7 +30,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en" className={`${lora.variable} ${cormorant.variable}`}>
+        <html lang="en" className={`${spectral.variable} ${cormorant.variable}`}>
             <body>
                 <AuthProvider>
                     {children}

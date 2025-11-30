@@ -73,7 +73,7 @@ export default function Topics({ posts = [] }: TopicsProps) {
                 </div>
 
                 <div className="relative inline-block">
-                    <h1 className="font-cormorant text-5xl sm:text-6xl md:text-7xl font-bold italic text-gray-900 mb-2 tracking-tight uppercase">
+                    <h1 className="font-cormorant text-5xl sm:text-6xl md:text-7xl font-extrabold italic text-black mb-2 tracking-tight uppercase">
                         TOPICS
                     </h1>
                     {/* Manga-style underline accent */}
@@ -110,7 +110,7 @@ export default function Topics({ posts = [] }: TopicsProps) {
             {/* SEARCH RESULTS */}
             {searchResults.length > 0 && (
                 <div className="mb-12">
-                    <h2 className="font-cormorant text-2xl sm:text-3xl md:text-4xl font-bold mb-6">
+                    <h2 className="font-cormorant text-2xl sm:text-3xl md:text-4xl font-extrabold text-black mb-6">
                         SEARCH RESULTS ({searchResults.length})
                     </h2>
                     <div className="flex flex-col gap-6">
@@ -144,11 +144,11 @@ export default function Topics({ posts = [] }: TopicsProps) {
                                         </span>
                                     </div>
 
-                                    <h3 className="font-cormorant text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors leading-tight">
+                                    <h3 className="font-cormorant text-2xl sm:text-3xl md:text-4xl font-extrabold text-black mb-2 group-hover:text-blue-600 transition-colors leading-tight">
                                         {post.title}
                                     </h3>
 
-                                    <p className="font-serif text-base sm:text-lg text-gray-700 line-clamp-2 leading-relaxed max-w-xl">
+                                    <p className="font-serif text-base sm:text-lg text-black line-clamp-2 leading-relaxed max-w-xl">
                                         {post.description}
                                     </p>
 
@@ -176,7 +176,7 @@ export default function Topics({ posts = [] }: TopicsProps) {
 
             {/* EXPLORE CATEGORIES */}
             <div className="text-center mb-8">
-                <h2 className="font-cormorant text-xl sm:text-2xl md:text-3xl font-bold inline-flex items-center gap-4">
+                <h2 className="font-cormorant text-xl sm:text-2xl md:text-3xl font-extrabold text-black inline-flex items-center gap-4">
                     <span className="h-1 w-8 bg-black rounded-full"></span>
                     EXPLORE CATEGORIES
                     <span className="h-1 w-8 bg-black rounded-full"></span>

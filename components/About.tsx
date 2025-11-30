@@ -11,9 +11,16 @@ export default function About() {
 
                 <div className="relative flex justify-center">
                     <div className="inline-block text-center">
-                        <h1 className="font-cormorant text-5xl sm:text-6xl md:text-7xl font-bold italic text-gray-900 mb-2 tracking-tight uppercase">
+                        <h1 className="font-cormorant text-5xl sm:text-6xl md:text-7xl font-extrabold italic text-black mb-2 tracking-tight uppercase">
                             ABOUT ME
                         </h1>
+                        <div className="text-center mb-12">
+                            <h2 className="font-cormorant text-3xl sm:text-4xl font-extrabold text-black inline-flex items-center gap-4">
+                                <span className="h-1 w-8 bg-black rounded-full"></span>
+                                What You'll Find Here
+                                <span className="h-1 w-8 bg-black rounded-full"></span>
+                            </h2>
+                        </div>
                         {/* Manga-style underline accent */}
                         <div className="flex gap-1 mt-2 justify-center">
                             <span className="w-12 h-1 bg-black"></span>
@@ -29,14 +36,14 @@ export default function About() {
 
                 {/* Introduction Card */}
                 <div className="border-4 border-black bg-white p-6 sm:p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all duration-200">
-                    <h2 className="font-cormorant text-3xl sm:text-4xl font-bold text-gray-900 mb-4 uppercase tracking-tight">
+                    <h2 className="font-cormorant text-3xl sm:text-4xl font-extrabold text-black mb-4">
                         The Developer's Log
                     </h2>
-                    <p className="font-serif text-base sm:text-lg text-gray-700 leading-relaxed mb-4">
-                        Welcome to my digital space. I'm <span className="font-bold text-black">Sujith V I</span>, a developer passionate about building digital worlds, one line of code at a time.
+                    <p className="font-serif text-base sm:text-lg text-black leading-relaxed mb-4">
+                        Welcome to my digital garden. I'm Sujith, a developer who loves building things that live on the internet.
                     </p>
-                    <p className="font-serif text-base sm:text-lg text-gray-700 leading-relaxed">
-                        This blog is where I share my thoughts, experiences, and learnings from the ever-evolving world of technology.
+                    <p className="font-serif text-base sm:text-lg text-black leading-relaxed">
+                        This blog is where I document my journey, share what I learn, and explore new technologies. It's a mix of technical deep dives, random thoughts, and everything in between.
                     </p>
                 </div>
 
@@ -65,8 +72,8 @@ export default function About() {
                             <span className="text-xl sm:text-2xl">💻</span>
                         </div>
                         <div>
-                            <h3 className="font-cormorant font-bold text-gray-900 mb-1 text-lg sm:text-xl uppercase">Technical Insights</h3>
-                            <p className="font-serif text-sm sm:text-base text-gray-600">Deep dives into code, frameworks, and development practices</p>
+                            <h3 className="font-cormorant font-extrabold text-black mb-1 text-lg sm:text-xl uppercase">Technical Insights</h3>
+                            <p className="font-serif text-sm sm:text-base text-black">Deep dives into code, frameworks, and development practices</p>
                         </div>
                     </div>
 
@@ -75,8 +82,8 @@ export default function About() {
                             <span className="text-xl sm:text-2xl">💭</span>
                         </div>
                         <div>
-                            <h3 className="font-cormorant font-bold text-gray-900 mb-1 text-lg sm:text-xl uppercase">Thoughts & Ideas</h3>
-                            <p className="font-serif text-sm sm:text-base text-gray-600">Reflections on technology, creativity, and problem-solving</p>
+                            <h3 className="font-cormorant font-extrabold text-black mb-1 text-lg sm:text-xl uppercase">Thoughts & Ideas</h3>
+                            <p className="font-serif text-sm sm:text-base text-black">Reflections on technology, creativity, and problem-solving</p>
                         </div>
                     </div>
 
@@ -85,8 +92,8 @@ export default function About() {
                             <span className="text-xl sm:text-2xl">📚</span>
                         </div>
                         <div>
-                            <h3 className="font-cormorant font-bold text-gray-900 mb-1 text-lg sm:text-xl uppercase">Learning Journey</h3>
-                            <p className="font-serif text-sm sm:text-base text-gray-600">Lessons learned, mistakes made, and growth achieved</p>
+                            <h3 className="font-cormorant font-extrabold text-black mb-1 text-lg sm:text-xl uppercase">Learning Journey</h3>
+                            <p className="font-serif text-sm sm:text-base text-black">Lessons learned, mistakes made, and growth achieved</p>
                         </div>
                     </div>
 
@@ -95,8 +102,8 @@ export default function About() {
                             <span className="text-xl sm:text-2xl">🎨</span>
                         </div>
                         <div>
-                            <h3 className="font-cormorant font-bold text-gray-900 mb-1 text-lg sm:text-xl uppercase">Creative Projects</h3>
-                            <p className="font-serif text-sm sm:text-base text-gray-600">Photography, design, and other creative endeavors</p>
+                            <h3 className="font-cormorant font-extrabold text-black mb-1 text-lg sm:text-xl uppercase">Creative Projects</h3>
+                            <p className="font-serif text-sm sm:text-base text-black">Photography, design, and other creative endeavors</p>
                         </div>
                     </div>
                 </div>
