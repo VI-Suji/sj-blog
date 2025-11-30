@@ -5,6 +5,10 @@ import Footer from "@/components/Footer";
 
 import { getPublishedPosts } from "@/lib/sanity.queries";
 
+// Force dynamic rendering to always fetch fresh data
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function Home() {
   const posts = await getPublishedPosts();
 

@@ -49,7 +49,9 @@ const postBySlugQuery = `*[_type == "post" && slug.current == $slug][0] {
 
 export async function getPublishedPosts(): Promise<BlogPost[]> {
     try {
-        const posts = await client.fetch(postsQuery)
+        const posts = await client.fetch(postsQuery, {}, {
+            cache: 'no-store', // Disable caching to always get fresh data
+        })
 
         return posts.map((post: any) => ({
             id: post._id,

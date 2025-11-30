@@ -3,6 +3,10 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { getPublishedPosts } from "@/lib/sanity.queries";
 
+// Force dynamic rendering to always fetch fresh data
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 async function BlogContent({ searchParams }: { searchParams: Promise<{ category?: string; tag?: string }> }) {
     const posts = await getPublishedPosts();
     const { category, tag } = await searchParams;
