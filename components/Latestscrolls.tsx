@@ -72,23 +72,19 @@ export default function LatestScrolls({ posts = [] }: LatestScrollsProps) {
                         </Link>
                     ))
                 ) : (
-                    // Skeleton Loader
-                    Array.from({ length: 3 }).map((_, idx) => (
-                        <div
-                            key={idx}
-                            className="bg-white border-4 border-black p-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] animate-pulse"
-                        >
-                            <div className="relative w-full h-48 bg-gray-200 mb-4"></div>
-                            <div className="h-6 bg-gray-200 mb-3 w-3/4"></div>
-                            <div className="h-4 bg-gray-200 mb-2 w-full"></div>
-                            <div className="h-4 bg-gray-200 mb-4 w-5/6"></div>
-                            <div className="flex gap-2 mb-3">
-                                <div className="h-6 w-16 bg-gray-200"></div>
-                                <div className="h-6 w-20 bg-gray-200"></div>
-                            </div>
-                            <div className="h-4 bg-gray-200 w-24"></div>
+                    // No Posts Message
+                    <div className="col-span-full py-20 text-center">
+                        <div className="max-w-md mx-auto">
+                            <div className="text-6xl mb-6">📜</div>
+                            <h3 className="font-merriweather text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
+                                No Scrolls Yet
+                            </h3>
+                            <p className="font-serif text-gray-600 text-base sm:text-lg mb-6">
+                                The archive is empty. Check back soon for new stories!
+                            </p>
+                            <div className="h-1 w-24 bg-black mx-auto"></div>
                         </div>
-                    ))
+                    </div>
                 )}
             </div>
 
