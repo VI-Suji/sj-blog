@@ -11,16 +11,9 @@ export default function About() {
 
                 <div className="relative flex justify-center">
                     <div className="inline-block text-center">
-                        <h1 className="font-cormorant text-5xl sm:text-6xl md:text-7xl font-extrabold italic text-black mb-2 tracking-tight uppercase">
+                        <h1 className="font-merriweather text-5xl sm:text-6xl md:text-7xl font-extrabold italic text-black mb-2 tracking-tight uppercase">
                             ABOUT ME
                         </h1>
-                        <div className="text-center mb-12">
-                            <h2 className="font-cormorant text-3xl sm:text-4xl font-extrabold text-black inline-flex items-center gap-4">
-                                <span className="h-1 w-8 bg-black rounded-full"></span>
-                                What You'll Find Here
-                                <span className="h-1 w-8 bg-black rounded-full"></span>
-                            </h2>
-                        </div>
                         {/* Manga-style underline accent */}
                         <div className="flex gap-1 mt-2 justify-center">
                             <span className="w-12 h-1 bg-black"></span>
@@ -36,7 +29,7 @@ export default function About() {
 
                 {/* Introduction Card */}
                 <div className="border-4 border-black bg-white p-6 sm:p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all duration-200">
-                    <h2 className="font-cormorant text-3xl sm:text-4xl font-extrabold text-black mb-4">
+                    <h2 className="font-merriweather text-3xl sm:text-4xl font-extrabold text-black mb-4">
                         The Developer's Log
                     </h2>
                     <p className="font-serif text-base sm:text-lg text-black leading-relaxed mb-4">
@@ -49,7 +42,7 @@ export default function About() {
 
                 {/* Philosophy Card */}
                 <div className="border-4 border-black bg-black text-white p-6 sm:p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all duration-200">
-                    <h2 className="font-cormorant text-3xl sm:text-4xl font-bold mb-4 uppercase tracking-tight">
+                    <h2 className="font-merriweather text-3xl sm:text-4xl font-extrabold mb-4 uppercase tracking-tight">
                         My Approach
                     </h2>
                     <p className="font-serif text-base sm:text-lg text-gray-300 leading-relaxed">
@@ -62,7 +55,7 @@ export default function About() {
 
             {/* What You'll Find Section */}
             <div className="border-4 border-black bg-white p-6 sm:p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] mb-12 sm:mb-16">
-                <h2 className="font-cormorant text-3xl sm:text-4xl font-bold text-gray-900 mb-6 sm:mb-8 uppercase tracking-tight">
+                <h2 className="font-merriweather text-3xl sm:text-4xl font-extrabold text-black mb-6 sm:mb-8 uppercase tracking-tight">
                     What You'll Find Here
                 </h2>
                 <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
@@ -72,7 +65,7 @@ export default function About() {
                             <span className="text-xl sm:text-2xl">💻</span>
                         </div>
                         <div>
-                            <h3 className="font-cormorant font-extrabold text-black mb-1 text-lg sm:text-xl uppercase">Technical Insights</h3>
+                            <h3 className="font-merriweather font-extrabold text-black mb-1 text-lg sm:text-xl uppercase">Technical Insights</h3>
                             <p className="font-serif text-sm sm:text-base text-black">Deep dives into code, frameworks, and development practices</p>
                         </div>
                     </div>
@@ -82,7 +75,7 @@ export default function About() {
                             <span className="text-xl sm:text-2xl">💭</span>
                         </div>
                         <div>
-                            <h3 className="font-cormorant font-extrabold text-black mb-1 text-lg sm:text-xl uppercase">Thoughts & Ideas</h3>
+                            <h3 className="font-merriweather font-extrabold text-black mb-1 text-lg sm:text-xl uppercase">Thoughts & Ideas</h3>
                             <p className="font-serif text-sm sm:text-base text-black">Reflections on technology, creativity, and problem-solving</p>
                         </div>
                     </div>
@@ -92,7 +85,7 @@ export default function About() {
                             <span className="text-xl sm:text-2xl">📚</span>
                         </div>
                         <div>
-                            <h3 className="font-cormorant font-extrabold text-black mb-1 text-lg sm:text-xl uppercase">Learning Journey</h3>
+                            <h3 className="font-merriweather font-extrabold text-black mb-1 text-lg sm:text-xl uppercase">Learning Journey</h3>
                             <p className="font-serif text-sm sm:text-base text-black">Lessons learned, mistakes made, and growth achieved</p>
                         </div>
                     </div>
@@ -102,7 +95,7 @@ export default function About() {
                             <span className="text-xl sm:text-2xl">🎨</span>
                         </div>
                         <div>
-                            <h3 className="font-cormorant font-extrabold text-black mb-1 text-lg sm:text-xl uppercase">Creative Projects</h3>
+                            <h3 className="font-merriweather font-extrabold text-black mb-1 text-lg sm:text-xl uppercase">Creative Projects</h3>
                             <p className="font-serif text-sm sm:text-base text-black">Photography, design, and other creative endeavors</p>
                         </div>
                     </div>

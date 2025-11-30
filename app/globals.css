@@ -7,23 +7,22 @@
 }
 
 body {
-    color: #000000;
+    color: rgb(var(--foreground-rgb));
     background: linear-gradient(to bottom,
             transparent,
             rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
-    font-family: var(--font-spectral), Georgia, serif;
+    font-family: var(--font-lora), Georgia, serif;
 }
 
-/* Apply Spectral to all headings */
+/* Apply Merriweather to all headings */
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-    font-family: var(--font-spectral), Georgia, serif;
-    font-weight: 800;
-    color: #000000;
+    font-family: var(--font-merriweather), serif;
+    font-weight: 900;
 }
 
 /* Apply Lora to all paragraphs (descriptions) */
@@ -33,9 +32,31 @@ p {
 
 /* Story reading fonts utility classes */
 .font-serif {
-    font-family: var(--font-spectral), Georgia, serif;
+    font-family: var(--font-lora), Georgia, serif;
 }
 
-.font-cormorant {
-    font-family: var(--font-cormorant), serif;
+.font-merriweather {
+    font-family: var(--font-merriweather), serif;
+}
+
+/* Sticky Editor Toolbar */
+.editor-toolbar {
+    position: sticky !important;
+    top: 73px !important;
+    /* Adjust based on header height */
+    z-index: 40 !important;
+    background-color: white !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    border-radius: 8px 8px 0 0 !important;
+}
+
+.editor-toolbar.fullscreen {
+    top: 0 !important;
+    z-index: 100 !important;
+}
+
+@media (max-width: 640px) {
+    .editor-toolbar {
+        top: 60px !important;
+    }
 }

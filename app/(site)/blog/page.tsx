@@ -3,16 +3,16 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { getPublishedPosts } from "@/lib/sanity.queries";
 
-async function BlogContent({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
+async function BlogContent({ searchParams }: { searchParams: Promise<{ category?: string; tag?: string }> }) {
     const posts = await getPublishedPosts();
-    const { category } = await searchParams;
+    const { category, tag } = await searchParams;
 
     return (
-        <Blog posts={posts} selectedCategory={category} />
+        <Blog posts={posts} selectedCategory={category} selectedTag={tag} />
     );
 }
 
-export default async function BlogPage({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
+export default async function BlogPage({ searchParams }: { searchParams: Promise<{ category?: string; tag?: string }> }) {
     return (
         <div className="flex flex-col min-h-screen">
             <Navbar />

@@ -1,7 +1,4 @@
 import Link from "next/link";
-import { Bangers } from "next/font/google";
-
-const bangers = Bangers({ subsets: ["latin"], weight: "400" });
 
 export default function Footer() {
     return (
@@ -10,10 +7,10 @@ export default function Footer() {
 
                 {/* Left Side: Brand & Links */}
                 <div className="flex flex-col items-center md:items-start gap-4">
-                    <Link href="/" className={`${bangers.className} text-2xl tracking-wide text-black hover:scale-105 active:scale-95 transition-transform`}>
+                    <Link href="/" className="font-merriweather text-2xl font-bold tracking-wide text-black hover:scale-105 active:scale-95 transition-transform uppercase">
                         SUJITH V I
                     </Link>
-                    <div className="flex gap-6 text-sm font-bold text-gray-600">
+                    <div className="flex gap-6 text-sm font-serif font-bold text-gray-600">
                         <Link href="/about" className="hover:text-black hover:underline decoration-2 underline-offset-4 active:text-gray-900 transition-all">About Me</Link>
                         {/* <Link href="/about" className="hover:text-black hover:underline decoration-2 underline-offset-4 active:text-gray-900 transition-all">Support</Link> */}
                         <a href="mailto:sujithvi06@gmail.com" className="hover:text-black hover:underline decoration-2 underline-offset-4 active:text-gray-900 transition-all">Contact</a>

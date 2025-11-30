@@ -41,6 +41,7 @@ export default function PostEditor({ post }: PostEditorProps) {
         category: post?.category || 'Technology',
         tags: post?.tags?.join(', ') || '',
         published: post?.published || false,
+        publishedAt: post?.publishedAt ? new Date(post.publishedAt).toISOString().slice(0, 16) : new Date().toISOString().slice(0, 16),
     })
 
     // Initialize preview URL if post has an image
@@ -156,7 +157,7 @@ export default function PostEditor({ post }: PostEditorProps) {
                 category: formData.category,
                 tags: formData.tags.split(',').map((t: string) => t.trim()).filter(Boolean),
                 published: formData.published,
-                publishedAt: formData.published ? (post?.publishedAt || new Date().toISOString()) : null,
+                publishedAt: formData.publishedAt ? new Date(formData.publishedAt).toISOString() : null,
             }
 
             // Add image if uploaded
@@ -193,6 +194,21 @@ export default function PostEditor({ post }: PostEditorProps) {
         placeholder: "Write your amazing content here...",
         status: false,
         autofocus: false,
+        toolbar: [
+            "bold", "italic", "heading", "|",
+            "quote", "unordered-list", "ordered-list", "|",
+            "link",
+            {
+                name: "custom-image",
+                action: (editor: any) => {
+                    document.getElementById('markdown-image-upload')?.click();
+                },
+                className: "fa fa-image",
+                title: "Upload Image",
+            },
+            "|",
+            "preview", "side-by-side", "fullscreen",
+        ] as any
     }), [])
 
     return (
@@ -272,19 +288,25 @@ export default function PostEditor({ post }: PostEditorProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
                 <div>
                     <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-2">Category</label>
-                    <select
+                    <input
+                        type="text"
                         name="category"
                         value={formData.category}
                         onChange={handleChange}
-                        className="w-full border border-slate-300 rounded-lg px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent transition-shadow bg-white"
-                    >
-                        <option value="Technology">Technology</option>
-                        <option value="Photography">Photography</option>
-                        <option value="Random Thoughts">Random Thoughts</option>
-                        <option value="Travel">Travel</option>
-                        <option value="Books">Books</option>
-                        <option value="Lifestyle">Lifestyle</option>
-                    </select>
+                        className="w-full border border-slate-300 rounded-lg px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent transition-shadow"
+                        placeholder="e.g. Technology"
+                        required
+                    />
+                </div>
+                <div>
+                    <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-2">Published Date</label>
+                    <input
+                        type="datetime-local"
+                        name="publishedAt"
+                        value={formData.publishedAt}
+                        onChange={handleChange}
+                        className="w-full border border-slate-300 rounded-lg px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent transition-shadow"
+                    />
                 </div>
                 <div>
                     <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-2">Tags (comma separated)</label>
@@ -302,24 +324,17 @@ export default function PostEditor({ post }: PostEditorProps) {
             <div className="mb-6 sm:mb-8">
                 <div className="flex items-center justify-between mb-2">
                     <label className="block text-xs sm:text-sm font-medium text-slate-700">Content (Markdown) *</label>
-
-                    {/* Image Upload Button */}
-                    <label className="cursor-pointer px-3 py-1.5 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                        </svg>
-                        <span>Add Image</span>
-                        <input
-                            type="file"
-                            className="hidden"
-                            accept="image/*"
-                            onChange={handleContentImageUpload}
-                            disabled={isSubmitting}
-                        />
-                    </label>
+                    <input
+                        id="markdown-image-upload"
+                        type="file"
+                        className="hidden"
+                        accept="image/*"
+                        onChange={handleContentImageUpload}
+                        disabled={isSubmitting}
+                    />
                 </div>
 
-                <div className="border border-slate-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-slate-400 transition-shadow">
+                <div className="border border-slate-300 rounded-lg focus-within:ring-2 focus-within:ring-slate-400 transition-shadow">
                     <SimpleMDE
                         value={formData.markdown}
                         onChange={handleMarkdownChange}

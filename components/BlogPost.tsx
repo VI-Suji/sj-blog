@@ -116,7 +116,7 @@ export default function BlogPost({ post, markdownContent }: BlogPostProps) {
                     <p key={elements.length} className={`
                         font-serif text-lg md:text-xl leading-relaxed md:leading-loose 
                         text-gray-800 mb-8
-                        ${isFirstParagraph ? 'first-letter:text-6xl first-letter:font-bold first-letter:mr-2 first-letter:float-left first-letter:font-cormorant first-letter:leading-none first-letter:mt-1' : ''}
+                        ${isFirstParagraph ? 'first-letter:text-5xl first-letter:font-black first-letter:mr-2 first-letter:float-left first-letter:font-merriweather first-letter:leading-[1] first-letter:text-black' : ''}
                     `}>
                         {parseInlineMarkdown(text)}
                     </p>
@@ -186,7 +186,7 @@ export default function BlogPost({ post, markdownContent }: BlogPostProps) {
                 flushParagraph();
                 flushList();
                 elements.push(
-                    <h1 key={elements.length} className="font-cormorant text-5xl md:text-6xl font-bold italic text-gray-900 mt-16 mb-8 pb-4 border-b border-gray-200">
+                    <h1 key={elements.length} className="font-merriweather text-5xl md:text-6xl font-bold italic text-gray-900 mt-16 mb-8 pb-4 border-b border-gray-200">
                         {line.slice(2)}
                     </h1>
                 );
@@ -194,7 +194,7 @@ export default function BlogPost({ post, markdownContent }: BlogPostProps) {
                 flushParagraph();
                 flushList();
                 elements.push(
-                    <h2 key={elements.length} className="font-cormorant text-4xl md:text-5xl font-bold text-gray-900 mt-14 mb-6 border-l-4 border-black pl-6">
+                    <h2 key={elements.length} className="font-merriweather text-4xl md:text-5xl font-bold text-gray-900 mt-14 mb-6 border-l-4 border-black pl-6">
                         {line.slice(3)}
                     </h2>
                 );
@@ -202,7 +202,7 @@ export default function BlogPost({ post, markdownContent }: BlogPostProps) {
                 flushParagraph();
                 flushList();
                 elements.push(
-                    <h3 key={elements.length} className="font-cormorant text-3xl md:text-4xl font-bold text-gray-900 mt-12 mb-5">
+                    <h3 key={elements.length} className="font-merriweather text-3xl md:text-4xl font-bold text-gray-900 mt-12 mb-5">
                         {line.slice(4)}
                     </h3>
                 );
@@ -210,7 +210,7 @@ export default function BlogPost({ post, markdownContent }: BlogPostProps) {
                 flushParagraph();
                 flushList();
                 elements.push(
-                    <h4 key={elements.length} className="font-cormorant text-2xl md:text-3xl font-bold text-gray-900 mt-10 mb-4">
+                    <h4 key={elements.length} className="font-merriweather text-2xl md:text-3xl font-bold text-gray-900 mt-10 mb-4">
                         {line.slice(5)}
                     </h4>
                 );
@@ -218,7 +218,7 @@ export default function BlogPost({ post, markdownContent }: BlogPostProps) {
                 flushParagraph();
                 flushList();
                 elements.push(
-                    <h5 key={elements.length} className="font-cormorant text-xl md:text-2xl font-bold text-gray-900 mt-8 mb-3">
+                    <h5 key={elements.length} className="font-merriweather text-xl md:text-2xl font-bold text-gray-900 mt-8 mb-3">
                         {line.slice(6)}
                     </h5>
                 );
@@ -226,7 +226,7 @@ export default function BlogPost({ post, markdownContent }: BlogPostProps) {
                 flushParagraph();
                 flushList();
                 elements.push(
-                    <h6 key={elements.length} className="font-cormorant text-lg md:text-xl font-bold text-gray-700 mt-6 mb-2 uppercase tracking-wider">
+                    <h6 key={elements.length} className="font-merriweather text-lg md:text-xl font-bold text-gray-700 mt-6 mb-2 uppercase tracking-wider">
                         {line.slice(7)}
                     </h6>
                 );
@@ -237,7 +237,7 @@ export default function BlogPost({ post, markdownContent }: BlogPostProps) {
                 flushList();
                 elements.push(
                     <blockquote key={elements.length} className="my-12 pl-8 md:pl-12 border-l-4 border-black relative">
-                        <div className="absolute -left-2 -top-4 text-6xl md:text-7xl text-gray-200 font-cormorant leading-none">"</div>
+                        <div className="absolute -left-2 -top-4 text-6xl md:text-7xl text-gray-200 font-merriweather leading-none">"</div>
                         <p className="font-serif text-xl md:text-2xl text-gray-800 leading-relaxed italic relative z-10">
                             {line.slice(2)}
                         </p>
@@ -310,10 +310,10 @@ export default function BlogPost({ post, markdownContent }: BlogPostProps) {
 
     return (
         <div className="min-h-screen bg-white">
-            {/* Scroll Progress Bar - Subtle */}
-            <div className="fixed top-0 left-0 w-full h-1 bg-gray-100 z-50">
+            {/* Scroll Progress Bar - Above Navbar */}
+            <div className="fixed top-0 left-0 w-full h-1.5 bg-gray-100 z-50">
                 <div
-                    className="h-full bg-black transition-all duration-150"
+                    className="h-full bg-blue-600 transition-all duration-150"
                     style={{ width: `${scrollProgress * 100}%` }}
                 ></div>
             </div>

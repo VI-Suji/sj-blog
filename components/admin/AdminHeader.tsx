@@ -2,9 +2,11 @@
 
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function AdminHeader() {
     const { data: session } = useSession();
+    const pathname = usePathname();
 
     return (
         <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">

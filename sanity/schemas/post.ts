@@ -40,30 +40,12 @@ export default defineType({
             name: 'category',
             title: 'Category',
             type: 'string',
-            options: {
-                list: [
-                    { title: 'Technology', value: 'Technology' },
-                    { title: 'Photography', value: 'Photography' },
-                    { title: 'Random Thoughts', value: 'Random Thoughts' },
-                    { title: 'Travel', value: 'Travel' },
-                    { title: 'Books', value: 'Books' },
-                    { title: 'Lifestyle', value: 'Lifestyle' },
-                ],
-            },
         }),
         defineField({
             name: 'tags',
             title: 'Tags',
             type: 'array',
             of: [{ type: 'string' }],
-            options: {
-                list: [
-                    { title: 'Thoughts', value: 'Thoughts' },
-                    { title: 'Books', value: 'Books' },
-                    { title: 'Tech', value: 'Tech' },
-                    { title: 'Pictures', value: 'Pictures' },
-                ],
-            },
         }),
         defineField({
             name: 'markdown',

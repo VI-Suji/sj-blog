@@ -9,6 +9,7 @@ export default defineConfig({
 
     projectId: 'gisuef4d',
     dataset: 'production',
+    basePath: '/studio',
 
     plugins: [structureTool(), visionTool()],
 

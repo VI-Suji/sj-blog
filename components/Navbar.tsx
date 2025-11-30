@@ -1,11 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Bangers } from "next/font/google";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-const bangers = Bangers({ subsets: ["latin"], weight: "400" });
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -25,7 +22,7 @@ export default function Navbar() {
             <div className="max-w-6xl mx-auto flex items-center justify-between px-6 relative z-10">
 
                 {/* LOGO */}
-                <Link href="/" className={`${bangers.className} text-3xl tracking-wide text-black z-50 relative hover:scale-105 active:scale-95 transition-transform`}>
+                <Link href="/" className="font-merriweather text-3xl font-bold tracking-wide text-black z-50 relative hover:scale-105 active:scale-95 transition-transform uppercase">
                     SUJITH V I
                 </Link>
 
@@ -94,7 +91,7 @@ export default function Navbar() {
                                 </div>
 
                                 <div className="relative inline-block">
-                                    <h1 className="font-cormorant text-3xl md:text-7xl font-extrabold text-black mb-2 tracking-tight uppercase">
+                                    <h1 className="font-merriweather text-3xl md:text-7xl font-extrabold text-black mb-2 tracking-tight uppercase">
                                         THE SCROLL <br /> SELECTION
                                     </h1>
                                     {/* Manga-style underline accent */}
@@ -117,28 +114,28 @@ export default function Navbar() {
                                 </div>
 
                                 <nav className="flex flex-col gap-4 pl-2">
-                                    <Link href="/" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between font-cormorant text-xl font-bold text-gray-800 hover:text-black active:scale-[0.98] transition-all group w-full p-2 rounded-lg hover:bg-gray-50">
+                                    <Link href="/" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between font-merriweather text-xl font-bold text-gray-800 hover:text-black active:scale-[0.98] transition-all group w-full p-2 rounded-lg hover:bg-gray-50">
                                         <div className="flex items-center gap-3">
                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
                                             <span>Home</span>
                                         </div>
                                         <svg className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
                                     </Link>
-                                    <Link href="/blog" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between font-cormorant text-xl font-bold text-gray-800 hover:text-black active:scale-[0.98] transition-all group w-full p-2 rounded-lg hover:bg-gray-50">
+                                    <Link href="/blog" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between font-merriweather text-xl font-bold text-gray-800 hover:text-black active:scale-[0.98] transition-all group w-full p-2 rounded-lg hover:bg-gray-50">
                                         <div className="flex items-center gap-3">
                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
                                             <span>Blog</span>
                                         </div>
                                         <svg className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
                                     </Link>
-                                    <Link href="/topics" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between font-cormorant text-xl font-bold text-gray-800 hover:text-black active:scale-[0.98] transition-all group w-full p-2 rounded-lg hover:bg-gray-50">
+                                    <Link href="/topics" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between font-merriweather text-xl font-bold text-gray-800 hover:text-black active:scale-[0.98] transition-all group w-full p-2 rounded-lg hover:bg-gray-50">
                                         <div className="flex items-center gap-3">
                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line></svg>
                                             <span>Topics</span>
                                         </div>
                                         <svg className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
                                     </Link>
-                                    <Link href="/about" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between font-cormorant text-xl font-bold text-gray-800 hover:text-black active:scale-[0.98] transition-all group w-full p-2 rounded-lg hover:bg-gray-50">
+                                    <Link href="/about" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between font-merriweather text-xl font-bold text-gray-800 hover:text-black active:scale-[0.98] transition-all group w-full p-2 rounded-lg hover:bg-gray-50">
                                         <div className="flex items-center gap-3">
                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                                             <span>About</span>

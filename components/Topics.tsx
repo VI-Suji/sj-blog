@@ -14,20 +14,36 @@ export default function Topics({ posts = [] }: TopicsProps) {
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState<BlogPost[]>([]);
 
-    // Categories - these should match the options in your Notion Category field
-    const categories = [
-        { name: "Technology", icon: "💻", color: "bg-blue-50" },
-        { name: "Photography", icon: "📷", color: "bg-purple-50" },
-        { name: "Random Thoughts", icon: "💭", color: "bg-yellow-50" },
-        { name: "Travel", icon: "✈️", color: "bg-green-50" },
-        { name: "Books", icon: "📚", color: "bg-pink-50" },
-        { name: "Lifestyle", icon: "🌟", color: "bg-orange-50" },
-    ];
+    // Icon and color options for categories
+    const iconOptions = ["💻", "📷", "💭", "✈️", "📚", "🌟", "🎨", "🎯", "🚀", "⚡"];
+    const colorOptions = ["bg-blue-50", "bg-purple-50", "bg-yellow-50", "bg-green-50", "bg-pink-50", "bg-orange-50", "bg-red-50", "bg-indigo-50", "bg-teal-50", "bg-cyan-50"];
 
-    // Get post count for each category using the actual Category field
-    const getCategoryCount = (category: string) => {
+    // Helper to normalize tag names (Title Case)
+    const toTitleCase = (str: string) => {
+        return str.replace(/\w\S*/g, (txt) => {
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        });
+    };
+
+    // Dynamically generate tags from posts (Case Insensitive Grouping)
+    const uniqueTags = Array.from(new Set(posts.flatMap(post => post.tags || []).map(tag => tag.toLowerCase()).filter(Boolean)));
+
+    const tags = uniqueTags.map((lowerTag, index) => {
+        // Find original name (first match) to use for display, or convert to Title Case
+        const originalName = posts.flatMap(p => p.tags || []).find(t => t?.toLowerCase() === lowerTag) || toTitleCase(lowerTag as string);
+
+        return {
+            name: toTitleCase(originalName), // Ensure consistent display
+            originalValue: lowerTag,
+            icon: iconOptions[index % iconOptions.length],
+            color: colorOptions[index % colorOptions.length]
+        };
+    });
+
+    // Get post count for each tag (Case Insensitive)
+    const getTagCount = (tagLower: string) => {
         return posts.filter(post =>
-            post.category?.toUpperCase() === category.toUpperCase()
+            post.tags?.some(t => t.toLowerCase() === tagLower)
         ).length;
     };
 
@@ -73,7 +89,7 @@ export default function Topics({ posts = [] }: TopicsProps) {
                 </div>
 
                 <div className="relative inline-block">
-                    <h1 className="font-cormorant text-5xl sm:text-6xl md:text-7xl font-extrabold italic text-black mb-2 tracking-tight uppercase">
+                    <h1 className="font-merriweather text-5xl sm:text-6xl md:text-7xl font-extrabold italic text-black mb-2 tracking-tight uppercase">
                         TOPICS
                     </h1>
                     {/* Manga-style underline accent */}
@@ -110,7 +126,7 @@ export default function Topics({ posts = [] }: TopicsProps) {
             {/* SEARCH RESULTS */}
             {searchResults.length > 0 && (
                 <div className="mb-12">
-                    <h2 className="font-cormorant text-2xl sm:text-3xl md:text-4xl font-extrabold text-black mb-6">
+                    <h2 className="font-merriweather text-2xl sm:text-3xl md:text-4xl font-extrabold text-black mb-6">
                         SEARCH RESULTS ({searchResults.length})
                     </h2>
                     <div className="flex flex-col gap-6">
@@ -118,7 +134,7 @@ export default function Topics({ posts = [] }: TopicsProps) {
                             <Link
                                 key={idx}
                                 href={`/post/${post.slug}`}
-                                className="group flex flex-col md:flex-row gap-6 items-start p-4 border-2 border-transparent hover:border-black hover:bg-gray-50 transition-all rounded-lg"
+                                className="group flex flex-col md:flex-row gap-6 items-start p-4 border-2 border-black hover:bg-gray-50 transition-all rounded-lg"
                             >
                                 {/* 1. Thumbnail Image */}
                                 <div className="relative w-full md:w-48 aspect-[3/2] shrink-0 border-2 border-black overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] group-hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] group-hover:-translate-y-0.5 transition-all">
@@ -144,7 +160,7 @@ export default function Topics({ posts = [] }: TopicsProps) {
                                         </span>
                                     </div>
 
-                                    <h3 className="font-cormorant text-2xl sm:text-3xl md:text-4xl font-extrabold text-black mb-2 group-hover:text-blue-600 transition-colors leading-tight">
+                                    <h3 className="font-merriweather text-xl sm:text-2xl md:text-3xl font-extrabold text-black mb-2 group-hover:text-blue-600 transition-colors leading-tight">
                                         {post.title}
                                     </h3>
 
@@ -176,34 +192,27 @@ export default function Topics({ posts = [] }: TopicsProps) {
 
             {/* EXPLORE CATEGORIES */}
             <div className="text-center mb-8">
-                <h2 className="font-cormorant text-xl sm:text-2xl md:text-3xl font-extrabold text-black inline-flex items-center gap-4">
+                <h2 className="font-merriweather text-xl sm:text-2xl md:text-3xl font-extrabold text-black inline-flex items-center gap-4">
                     <span className="h-1 w-8 bg-black rounded-full"></span>
-                    EXPLORE CATEGORIES
+                    EXPLORE TAGS
                     <span className="h-1 w-8 bg-black rounded-full"></span>
                 </h2>
             </div>
 
-            {/* CATEGORY LIST */}
-            <div className="space-y-4">
-                {categories.map((cat, idx) => {
-                    const count = getCategoryCount(cat.name);
+            {/* TAG LIST */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                {tags.map((tag, idx) => {
+                    const count = getTagCount(tag.originalValue as string);
                     return (
                         <Link
                             key={idx}
-                            href={`/blog?category=${encodeURIComponent(cat.name)}`}
-                            className={`${cat.color} border-2 border-black rounded-full p-4 flex items-center justify-between hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 active:translate-y-0 active:shadow-none active:scale-[0.98] transition-all cursor-pointer group`}
+                            href={`/blog?tag=${encodeURIComponent(tag.name)}`}
+                            className={`${tag.color} border-2 border-black rounded-xl p-3 flex flex-col items-center justify-center text-center gap-2 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 active:translate-y-0 active:shadow-none active:scale-[0.98] transition-all cursor-pointer group h-full`}
                         >
-                            <div className="flex items-center gap-4">
-                                <div className="text-2xl w-10 text-center">{cat.icon}</div>
-                                <div className="flex flex-col">
-                                    <span className="font-cormorant font-black text-lg sm:text-xl md:text-2xl tracking-wide group-hover:text-gray-700">{cat.name}</span>
-                                    <span className="font-serif text-xs sm:text-sm text-gray-500">{count} Scroll{count !== 1 ? 's' : ''}</span>
-                                </div>
-                            </div>
-                            <div className="w-8 h-8 border-2 border-black rounded-full flex items-center justify-center group-hover:bg-black group-hover:text-white transition-colors">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M5 12h14M12 5l7 7-7 7" />
-                                </svg>
+                            <div className="text-2xl">{tag.icon}</div>
+                            <div className="flex flex-col">
+                                <span className="font-merriweather font-bold text-sm sm:text-base leading-tight group-hover:text-gray-700">{tag.name}</span>
+                                <span className="font-serif text-[10px] sm:text-xs text-gray-500 mt-1">{count} Scroll{count !== 1 ? 's' : ''}</span>
                             </div>
                         </Link>
                     );

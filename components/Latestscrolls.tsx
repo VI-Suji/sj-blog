@@ -20,7 +20,7 @@ export default function LatestScrolls({ posts = [] }: LatestScrollsProps) {
                 </div>
 
                 <div className="relative inline-block">
-                    <h2 className="font-cormorant text-5xl sm:text-6xl md:text-7xl font-extrabold italic text-black mb-2 tracking-tight uppercase">
+                    <h2 className="font-merriweather text-5xl sm:text-6xl md:text-7xl font-extrabold italic text-black mb-2 tracking-tight uppercase">
                         LATEST SCROLLS
                     </h2>
                     {/* Manga-style underline accent */}
@@ -54,7 +54,7 @@ export default function LatestScrolls({ posts = [] }: LatestScrollsProps) {
 
                             {/* Content */}
                             <div className="flex-1 flex flex-col">
-                                <h3 className="font-cormorant font-extrabold text-black text-2xl sm:text-3xl md:text-4xl leading-none mb-4 group-hover:underline md:whitespace-normal">{post.title}</h3>
+                                <h3 className="font-merriweather font-extrabold text-black text-xl sm:text-2xl md:text-3xl leading-none mb-4 group-hover:underline md:whitespace-normal">{post.title}</h3>
 
                                 <div className="text-xs font-bold text-gray-500 mb-4 flex justify-between border-b-2 border-gray-100 pb-2">
                                     <span>{new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>

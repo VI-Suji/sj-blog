@@ -1,14 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Lora, Merriweather } from "next/font/google";
+import AuthProvider from "@/components/AuthProvider";
+import "../globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+// Serif font for body text - excellent for reading
+const lora = Lora({
+  weight: ['400', '500', '600', '700'],
+  subsets: ['latin'],
+  variable: '--font-lora',
+  display: 'swap',
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+// Display font for headings - readable and distinctive
+const merriweather = Merriweather({
+  weight: ['400', '700', '900'],
+  subsets: ['latin'],
+  variable: '--font-merriweather',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -25,8 +33,17 @@ export default function SiteLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className={`${geistSans.variable} ${geistMono.variable} antialiased animate-in fade-in duration-500 min-h-screen flex flex-col`}>
-      {children}
-    </div>
+    <html lang="en" className={`${lora.variable} ${merriweather.variable}`}>
+      <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+      </head>
+      <body>
+        <AuthProvider>
+          <div className="antialiased animate-in fade-in duration-500 min-h-screen flex flex-col">
+            {children}
+          </div>
+        </AuthProvider>
+      </body>
+    </html>
   );
 }

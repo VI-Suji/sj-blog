@@ -1,7 +1,4 @@
 import Image from "next/image";
-import { Bangers } from "next/font/google";
-
-const bangers = Bangers({ subsets: ["latin"], weight: "400" });
 
 export default function Hero() {
     return (
@@ -29,18 +26,13 @@ export default function Hero() {
 
                         {/* TEXT CONTENT */}
                         {/* Mobile: Card Style | Desktop: Clean Text */}
-                        <div className="bg-white border-4 border-black p-2 max-w-[90%] md:max-w-xl md:bg-transparent md:border-0 md:shadow-none md:p-0 pointer-events-auto">
-                            <h1 className={`${bangers.className} text-5xl md:text-7xl font-bold leading-none text-black mb-6`}>
-                                The best way to predict the future is to <span className="text-red-600 inline-block cursor-pointer hover:scale-105 active:scale-95 transition-transform">invent</span> it.
+                        <div className="bg-white border-4 border-black p-4 max-w-[90%] md:max-w-xl md:bg-transparent md:border-0 md:shadow-none md:p-0 pointer-events-auto">
+                            <h1 className="font-merriweather text-2xl sm:text-3xl md:text-5xl font-black leading-tight text-black mb-3 md:mb-6 uppercase tracking-tight">
+                                THE BEST WAY TO PREDICT THE FUTURE IS TO <span className="text-red-600 inline-block cursor-pointer hover:scale-105 active:scale-95 transition-transform">INVENT</span> IT.
                             </h1>
-                            {/* <div className="flex gap-4 mb-6 md:hidden">
-                                <button onClick={() => onNavClick('blog')} className="bg-black text-white px-6 py-3 font-bold text-sm shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)] active:translate-y-1 active:shadow-none transition-all">
-                                    START SAGA
-                                </button>
-                            </div> */}
-                            <p className="text-xl font-bold text-gray-500 italic text-right flex items-center justify-end gap-3">
-                                <span className="h-1 w-12 bg-gray-300 rounded-full"></span>
-                                Alan Kay
+                            <p className="font-serif text-xs md:text-base font-black text-gray-500 italic text-right flex items-center justify-end gap-2 uppercase tracking-widest">
+                                <span className="h-1 w-6 md:w-10 bg-gray-300 rounded-full"></span>
+                                ALAN KAY
                             </p>
                         </div>
                     </div>

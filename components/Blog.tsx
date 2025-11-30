@@ -9,19 +9,21 @@ import { BlogPost } from "@/lib/types";
 interface BlogProps {
     posts?: BlogPost[];
     selectedCategory?: string | null;
+    selectedTag?: string | null;
 }
 
-export default function Blog({ posts = [], selectedCategory }: BlogProps) {
-    const [selectedTag, setSelectedTag] = useState<string | null>(null);
+export default function Blog({ posts = [], selectedCategory: initialCategory, selectedTag: initialTag }: BlogProps) {
+    const [currentCategory, setCurrentCategory] = useState<string | null>(initialCategory || null);
+    const [selectedTag, setSelectedTag] = useState<string | null>(initialTag || null);
     const [currentPage, setCurrentPage] = useState(1);
     const postsPerPage = 4; // Show 4 items per page
 
     // Filter logic
     const filteredPosts = useMemo(() => {
         let filtered = posts;
-        if (selectedCategory) {
+        if (currentCategory) {
             filtered = filtered.filter(post =>
-                post.category?.toLowerCase() === selectedCategory.toLowerCase()
+                post.category?.toLowerCase() === currentCategory.toLowerCase()
             );
         }
         if (selectedTag) {
@@ -31,16 +33,18 @@ export default function Blog({ posts = [], selectedCategory }: BlogProps) {
             });
         }
         return filtered;
-    }, [posts, selectedCategory, selectedTag]);
+    }, [posts, currentCategory, selectedTag]);
 
-    // Extract unique tags from ALL posts (case-insensitive)
-    const allTags = useMemo(() => {
-        const tags = new Set<string>();
+    // Extract unique categories from ALL posts (case-insensitive)
+    const allCategories = useMemo(() => {
+        const categories = new Set<string>();
         posts.forEach(post => {
-            post.tags?.forEach(tag => tags.add(tag.toLowerCase())); // Normalize to lowercase
+            if (post.category) {
+                categories.add(post.category.toLowerCase());
+            }
         });
         // Capitalize first letter for display
-        return Array.from(tags).sort().map(tag => tag.charAt(0).toUpperCase() + tag.slice(1));
+        return Array.from(categories).sort().map(cat => cat.charAt(0).toUpperCase() + cat.slice(1));
     }, [posts]);
 
     // Pagination Logic
@@ -49,11 +53,10 @@ export default function Blog({ posts = [], selectedCategory }: BlogProps) {
     const endIndex = startIndex + postsPerPage;
     const currentPosts = filteredPosts.slice(startIndex, endIndex);
 
-    const handleTagClick = (tag: string) => {
-        // Compare lowercase for logic
-        const tagLower = tag.toLowerCase();
-        const selectedLower = selectedTag?.toLowerCase();
-        setSelectedTag(selectedLower === tagLower ? null : tag);
+    const handleCategoryClick = (category: string) => {
+        const catLower = category.toLowerCase();
+        const currentLower = currentCategory?.toLowerCase();
+        setCurrentCategory(currentLower === catLower ? null : category);
         setCurrentPage(1);
     };
 
@@ -74,7 +77,7 @@ export default function Blog({ posts = [], selectedCategory }: BlogProps) {
 
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 relative z-10">
                     <div className="relative inline-block">
-                        <h1 className="font-cormorant text-5xl sm:text-6xl md:text-7xl font-extrabold italic text-black mb-2 tracking-tight uppercase">
+                        <h1 className="font-merriweather text-5xl sm:text-6xl md:text-7xl font-extrabold italic text-black mb-2 tracking-tight uppercase">
                             THE ARCHIVE
                         </h1>
                         {/* Manga-style underline accent */}
@@ -85,18 +88,18 @@ export default function Blog({ posts = [], selectedCategory }: BlogProps) {
                         </div>
                     </div>
 
-                    {/* Minimal Filters - Dynamic Tags */}
+                    {/* Minimal Filters - Dynamic Categories */}
                     <div className="flex gap-2 flex-wrap self-start md:self-end mb-2 max-w-md justify-end">
-                        {allTags.map((tag) => (
+                        {allCategories.map((category) => (
                             <button
-                                key={tag}
-                                onClick={() => handleTagClick(tag)}
-                                className={`px-3 py-1 text-xs font-bold uppercase border-2 border-black transition-all ${selectedTag?.toLowerCase() === tag.toLowerCase()
+                                key={category}
+                                onClick={() => handleCategoryClick(category)}
+                                className={`px-3 py-1 text-xs font-bold uppercase border-2 border-black transition-all ${currentCategory?.toLowerCase() === category.toLowerCase()
                                     ? "bg-black text-white"
                                     : "bg-white text-black hover:bg-gray-100"
                                     }`}
                             >
-                                {tag}
+                                {category}
                             </button>
                         ))}
                     </div>
@@ -104,14 +107,14 @@ export default function Blog({ posts = [], selectedCategory }: BlogProps) {
             </header>
 
             {/* ACTIVE FILTER INDICATOR */}
-            {(selectedCategory || selectedTag) && (
+            {(currentCategory || selectedTag) && (
                 <div className="mb-8 flex items-center gap-2 animate-fade-in flex-wrap">
                     <span className="text-sm font-bold text-gray-500 uppercase">
                         Viewing:
                     </span>
-                    {selectedCategory && (
+                    {currentCategory && (
                         <span className="px-3 py-1 bg-black text-white text-xs font-black uppercase border-2 border-black">
-                            Category: {selectedCategory}
+                            Category: {currentCategory}
                         </span>
                     )}
                     {selectedTag && (
@@ -125,14 +128,16 @@ export default function Blog({ posts = [], selectedCategory }: BlogProps) {
                             </button>
                         </span>
                     )}
-                    {(selectedCategory || selectedTag) && (
-                        <Link
-                            href="/blog"
-                            onClick={() => setSelectedTag(null)}
+                    {(currentCategory || selectedTag) && (
+                        <button
+                            onClick={() => {
+                                setCurrentCategory(null);
+                                setSelectedTag(null);
+                            }}
                             className="text-xs font-bold text-gray-400 hover:text-black underline ml-2"
                         >
                             Clear All
-                        </Link>
+                        </button>
                     )}
                 </div>
             )}
@@ -143,7 +148,7 @@ export default function Blog({ posts = [], selectedCategory }: BlogProps) {
                     <Link
                         href={`/post/${post.slug}`}
                         key={post.id || post.slug}
-                        className="group flex flex-col md:flex-row gap-6 items-start p-4 border-2 border-transparent hover:border-black hover:bg-gray-50 transition-all rounded-lg"
+                        className="group flex flex-col md:flex-row gap-6 items-start p-4 border-2 border-black md:border-transparent hover:border-black hover:bg-gray-50 transition-all rounded-lg"
                     >
                         {/* 1. Thumbnail Image (Visible) */}
                         <div className="relative w-full md:w-48 aspect-[16/9] md:aspect-[3/2] shrink-0 border-2 border-black overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] group-hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] group-hover:-translate-y-0.5 transition-all">
@@ -169,7 +174,7 @@ export default function Blog({ posts = [], selectedCategory }: BlogProps) {
                                 </span>
                             </div>
 
-                            <h3 className="font-cormorant text-2xl sm:text-3xl md:text-4xl font-extrabold text-black mb-2 group-hover:text-blue-600 transition-colors leading-tight">
+                            <h3 className="font-merriweather text-xl sm:text-2xl md:text-3xl font-extrabold text-black mb-2 group-hover:text-blue-600 transition-colors leading-tight">
                                 {post.title}
                             </h3>
 
