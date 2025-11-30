@@ -29,7 +29,7 @@ export default function SignIn() {
 
                     {/* Google Button */}
                     <button
-                        onClick={() => signIn("google", { callbackUrl: "/admin" })}
+                        onClick={() => signIn("google", { callbackUrl: "/admin", redirect: true })}
                         className="w-full group relative bg-gray-900 text-white h-12 sm:h-14 flex items-center justify-center gap-3 rounded-xl hover:bg-gray-800 transition-all duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base"
                     >
                         {/* Icon */}

@@ -52,7 +52,7 @@ export default function AdminHeader() {
 
                         {/* Logout Button */}
                         <button
-                            onClick={() => signOut({ callbackUrl: "/" })}
+                            onClick={() => signOut({ callbackUrl: "/auth/signin", redirect: true })}
                             className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gray-900 text-white text-sm font-semibold hover:bg-gray-800 transition-all rounded-lg shadow-sm"
                         >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
